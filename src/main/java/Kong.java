@@ -6,6 +6,9 @@ public class Kong {
                 + "| . \\ (_) | | | | (_| |\n"
                 + "|_|\\_\\___/|_| |_|\\__, |\n"
                 + "                 |___/ \n";
-        System.out.println(banner);
+
+        String line = "________________________________________\n";
+        String out = banner + line + "Hello, I'm Kong.\nWhat can T do for you?\n" + line + "Bye. Hope to see you again soon!";
+        System.out.println(out);
     }
 }
