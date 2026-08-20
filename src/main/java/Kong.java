@@ -20,7 +20,7 @@ public class Kong {
                 System.out.println(line + "Bye. Hope to see you again soon!");
                 break;
             }
-            System.out.println(line + input + "\n" +lineh);
+            System.out.println(line + input + "\n" +line);
         }
         scanner.close();
     }
