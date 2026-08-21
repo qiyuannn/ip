@@ -1,5 +1,7 @@
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 public class Kong {
     public static void main(String[] args) {
@@ -19,59 +21,49 @@ public class Kong {
         Scanner scanner = new Scanner(System.in);
         while (true) {
             String input = scanner.nextLine();
-            System.out.println(line);
+            String[] parts = input.split("\\s+", 2);
+            String command = parts[0];
+            String arg = parts[1];
 
-            if (input.isEmpty()) {
-                System.out.println("Please enter a valid command.");
-                System.out.println(line);
-            } else if (input.equals("bye")) {
-                System.out.println("Bye. Hope to see you again soon!");
-                scanner.close();
-                return;
-            } else if (input.equals("list")) {
-                System.out.println("Here are the tasts in your list.");
-                for (int i = 0; i < lst.size(); i++) {
-                    System.out.println(String.format("%d. %s", i + 1, lst.get(i).toString()));
-                }
-                System.out.println(line);
-            } else if (input.startsWith("mark")) {
-                String[] parts = input.split("\\s+", 2);
-                if (parts.length < 2) {
-                    System.out.println("Please enter a valid task number.");
+            if (command.equals("todo")) {
+                lst.add(new ToDo(arg));
+            } else if (command.equals("deadline")) {
+                Pattern pattern = Pattern.compile("^(.*?)\\s*/by\\s+(.*)$", Pattern.CASE_INSENSITIVE);
+                Matcher matcher = pattern.matcher(arg);
+
+                if (matcher.find()) {
+                    String desc = matcher.group(1);
+                    String by = matcher.group(2);
+                    lst.add(new Deadline(desc, by));
                 } else {
-                    try {
-                        int ix = Integer.parseInt(parts[1]) - 1;
-                        if (ix < 0 || ix >= lst.size()) {
-                            System.out.println("Task number out of range. Please enter a number between 1 and " + lst.size() + ".");
-                        } else {
-                            System.out.println(lst.get(ix).mark());
-                        }
-                    } catch (NumberFormatException e) {
-                        System.out.println("Please enter a valid task number.");
-                    }
+                    System.out.println("Invalid command");
                 }
-                System.out.println(line);
-            } else if (input.startsWith("unmark")) {
-                String[] parts = input.split("\\s+", 2);
-                if (parts.length < 2) {
-                    System.out.println("Please enter a valid task number.");
+            } else if (command.equals("event")) {
+                Pattern pattern = Pattern.compile("^(.*?)\\s*/from\\s+(.*?)\\s*/to\\s+(.*)$", Pattern.CASE_INSENSITIVE);
+                Matcher matcher = pattern.matcher(arg);
+
+                if (matcher.find()) {
+                    String desc = matcher.group(1);
+                    String from = matcher.group(2);
+                    String to = matcher.group(3);
+                    lst.add(new Event(desc, from, to));
                 } else {
-                    try {
-                        int ix = Integer.parseInt(parts[1]) - 1;
-                        if (ix < 0 || ix >= lst.size()) {
-                            System.out.println("Task number out of range. You currently have " + lst.size() + " items in your list.");
-                        } else {
-                            System.out.println(lst.get(ix).unmark());
-                        }
-                    } catch (NumberFormatException e) {
-                        System.out.println("Please enter a valid task number.");
-                    }
+                    System.out.println("Invalid Command");
                 }
-                System.out.println(line);
+            } else if (command.equals("list")) {
+                System.out.println("Here are the tasks in your list.");
+                for (int i = 0; i < lst.size(); i ++) {
+                    System.out.println(String.format("%d. %s", i, lst.get(i).toString()));
+                }
+            } else if (command.equals("mark")) {
+                lst.get(Integer.parseInt(arg) - 1).mark();
+            } else if (command.equals("unmark")) {
+                lst.get(Integer.parseInt(arg) - 1).unmark();
+            } else if (command.equals("bye")) {
+                System.out.println("BYEBYE!");
+                break;
             } else {
-                lst.add(new Task(input));
-                System.out.println("added: " + input);
-                System.out.println(line);
+                System.out.println("Please enter a valid command.");
             }
         }
     }

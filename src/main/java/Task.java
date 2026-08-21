@@ -1,19 +1,16 @@
 public class Task {
-    private String desc;
+    private String description;
     private boolean done = false;
 
     public Task(String desc) {
-        this.desc = desc;
+        this.description = desc;
     }
 
-    public String mark() {
+    public void mark() {
         this.done = true;
-        return String.format("Nice! I've marked this task as done: \n%s", this.toString());
     }
-
-    public String unmark() {
+    public void unmark() {
         this.done = false;
-        return String.format("I've marked this task as not done yet:\n%s", this.toString());
     }
 
     @Override
@@ -24,6 +21,6 @@ public class Task {
         } else {
             out += "[ ]";
         }
-        return String.format("%s %s", out, this.desc);
+        return String.format("%s %s", out, this.description);
     }
 }
