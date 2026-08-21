@@ -63,9 +63,13 @@ public class Kong {
                         throw new KongException("Invalid command. An event command needs to be in the following format: event <description> /from <date> /to <date>");
                     }
                 } else if (command.equals("list")) {
-                    System.out.println("Here are the tasks in your list.");
-                    for (int i = 0; i < lst.size(); i++) {
-                        System.out.println(String.format("%d. %s", i + 1 , lst.get(i).toString()));
+                    if (!lst.isEmpty()){
+                        System.out.println("Here are the tasks in your list.");
+                        for (int i = 0; i < lst.size(); i++) {
+                            System.out.println(String.format("%d. %s", i + 1, lst.get(i).toString()));
+                        }
+                    } else {
+                        System.out.println("There are currently no tasks in your list.");
                     }
                 } else if (command.equals("mark")) {
                     try {
@@ -78,6 +82,18 @@ public class Kong {
                 } else if (command.equals("unmark")) {
                     try {
                         lst.get(Integer.parseInt(arg) - 1).unmark();
+                    } catch (NumberFormatException e) {
+                        throw new KongException("Invalid command. A unmark command needs to be followed by a number.");
+                    } catch (IndexOutOfBoundsException e) {
+                        throw new KongException(String.format("This task number is invalid. You currently have %d tasks in your list.", lst.size()));
+                    }
+                } else if (command.equals("delete")) {
+                    try {
+                        int ix = Integer.parseInt(arg) - 1;
+                        Task task = lst.get(ix);
+                        lst.remove(ix);
+                        System.out.println("The following task have been removed.");
+                        System.out.println(task.toString());
                     } catch (NumberFormatException e) {
                         throw new KongException("Invalid command. A unmark command needs to be followed by a number.");
                     } catch (IndexOutOfBoundsException e) {
