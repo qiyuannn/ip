@@ -27,83 +27,100 @@ public class Kong {
                     throw new KongException("Please enter a command.");
                 }
                 String[] parts = input.split("\\s+", 2);
-                String command = parts[0];
+                Command command = Command.fromString(parts[0]);
                 String arg = parts.length > 1 ? parts[1] : "";
 
-                if (command.equals("todo")) {
-                    if (arg.isEmpty()) {
-                        throw new KongException("Invalid command. A todo command needs to be in the following format: todo <description>");
+                switch (command) {
+                    case TODO: {
+                        if (arg.isEmpty()) {
+                            throw new KongException("Invalid command. A todo command needs to be in the following format: todo <description>");
+                        }
+                        lst.add(new ToDo(arg));
+                        break;
                     }
-                    lst.add(new ToDo(arg));
-                } else if (command.equals("deadline")) {
-                    Pattern pattern = Pattern.compile("^(.*?)\\s*/by\\s+(.*)$", Pattern.CASE_INSENSITIVE);
-                    Matcher matcher = pattern.matcher(arg);
-                    if (matcher.find()) {
-                        String desc = matcher.group(1);
-                        String by = matcher.group(2);
-                        if (desc.isEmpty() || by.isEmpty()) {
+                    case DEADLINE: {
+                        Pattern pattern = Pattern.compile("^(.*?)\\s*/by\\s+(.*)$", Pattern.CASE_INSENSITIVE);
+                        Matcher matcher = pattern.matcher(arg);
+                        if (matcher.find()) {
+                            String desc = matcher.group(1);
+                            String by = matcher.group(2);
+                            if (desc.isEmpty() || by.isEmpty()) {
+                                throw new KongException("Invalid command. A deadline command needs to be in the following format: deadline <description> /by <date>");
+                            }
+                            lst.add(new Deadline(desc, by));
+                        } else {
                             throw new KongException("Invalid command. A deadline command needs to be in the following format: deadline <description> /by <date>");
                         }
-                        lst.add(new Deadline(desc, by));
-                    } else {
-                        throw new KongException("Invalid command. A deadline command needs to be in the following format: deadline <description> /by <date>");
+                        break;
                     }
-                } else if (command.equals("event")) {
-                    Pattern pattern = Pattern.compile("^(.*?)\\s*/from\\s+(.*?)\\s*/to\\s+(.*)$", Pattern.CASE_INSENSITIVE);
-                    Matcher matcher = pattern.matcher(arg);
-                    if (matcher.find()) {
-                        String desc = matcher.group(1);
-                        String from = matcher.group(2);
-                        String to = matcher.group(3);
-                        if (desc.isEmpty() || from.isEmpty() || to.isEmpty()) {
+                    case EVENT: {
+                        Pattern pattern = Pattern.compile("^(.*?)\\s*/from\\s+(.*?)\\s*/to\\s+(.*)$", Pattern.CASE_INSENSITIVE);
+                        Matcher matcher = pattern.matcher(arg);
+                        if (matcher.find()) {
+                            String desc = matcher.group(1);
+                            String from = matcher.group(2);
+                            String to = matcher.group(3);
+                            if (desc.isEmpty() || from.isEmpty() || to.isEmpty()) {
+                                throw new KongException("Invalid command. An event command needs to be in the following format: event <description> /from <date> /to <date>");
+                            }
+                            lst.add(new Event(desc, from, to));
+                        } else {
                             throw new KongException("Invalid command. An event command needs to be in the following format: event <description> /from <date> /to <date>");
                         }
-                        lst.add(new Event(desc, from, to));
-                    } else {
-                        throw new KongException("Invalid command. An event command needs to be in the following format: event <description> /from <date> /to <date>");
+                        break;
                     }
-                } else if (command.equals("list")) {
-                    if (!lst.isEmpty()){
-                        System.out.println("Here are the tasks in your list.");
-                        for (int i = 0; i < lst.size(); i++) {
-                            System.out.println(String.format("%d. %s", i + 1, lst.get(i).toString()));
+                    case LIST: {
+                        if (!lst.isEmpty()) {
+                            System.out.println("Here are the tasks in your list.");
+                            for (int i = 0; i < lst.size(); i++) {
+                                System.out.println(String.format("%d. %s", i + 1, lst.get(i).toString()));
+                            }
+                        } else {
+                            System.out.println("There are currently no tasks in your list.");
                         }
-                    } else {
-                        System.out.println("There are currently no tasks in your list.");
+                        break;
                     }
-                } else if (command.equals("mark")) {
-                    try {
-                        lst.get(Integer.parseInt(arg) - 1).mark();
-                    } catch (NumberFormatException e) {
-                        throw new KongException("Invalid command. A mark command needs to be followed by a number.");
-                    } catch (IndexOutOfBoundsException e) {
-                        throw new KongException(String.format("This task number is invalid. You currently have %d tasks in your list.", lst.size()));
+                    case MARK: {
+                        try {
+                            lst.get(Integer.parseInt(arg) - 1).mark();
+                        } catch (NumberFormatException e) {
+                            throw new KongException("Invalid command. A mark command needs to be followed by a number.");
+                        } catch (IndexOutOfBoundsException e) {
+                            throw new KongException(String.format("This task number is invalid. You currently have %d tasks in your list.", lst.size()));
+                        }
+                        break;
                     }
-                } else if (command.equals("unmark")) {
-                    try {
-                        lst.get(Integer.parseInt(arg) - 1).unmark();
-                    } catch (NumberFormatException e) {
-                        throw new KongException("Invalid command. A unmark command needs to be followed by a number.");
-                    } catch (IndexOutOfBoundsException e) {
-                        throw new KongException(String.format("This task number is invalid. You currently have %d tasks in your list.", lst.size()));
+                    case UNMARK: {
+                        try {
+                            lst.get(Integer.parseInt(arg) - 1).unmark();
+                        } catch (NumberFormatException e) {
+                            throw new KongException("Invalid command. A unmark command needs to be followed by a number.");
+                        } catch (IndexOutOfBoundsException e) {
+                            throw new KongException(String.format("This task number is invalid. You currently have %d tasks in your list.", lst.size()));
+                        }
+                        break;
                     }
-                } else if (command.equals("delete")) {
-                    try {
-                        int ix = Integer.parseInt(arg) - 1;
-                        Task task = lst.get(ix);
-                        lst.remove(ix);
-                        System.out.println("The following task have been removed.");
-                        System.out.println(task.toString());
-                    } catch (NumberFormatException e) {
-                        throw new KongException("Invalid command. A unmark command needs to be followed by a number.");
-                    } catch (IndexOutOfBoundsException e) {
-                        throw new KongException(String.format("This task number is invalid. You currently have %d tasks in your list.", lst.size()));
+                    case DELETE: {
+                        try {
+                            int ix = Integer.parseInt(arg) - 1;
+                            Task task = lst.get(ix);
+                            lst.remove(ix);
+                            System.out.println("The following task have been removed.");
+                            System.out.println(task.toString());
+                        } catch (NumberFormatException e) {
+                            throw new KongException("Invalid command. A unmark command needs to be followed by a number.");
+                        } catch (IndexOutOfBoundsException e) {
+                            throw new KongException(String.format("This task number is invalid. You currently have %d tasks in your list.", lst.size()));
+                        }
+                        break;
                     }
-                } else if (command.equals("bye")) {
-                    System.out.println("BYEBYE!");
-                    break;
-                } else {
-                    throw new KongException("Sorry we do not recognise that command yet.");
+                    case BYE: {
+                        System.out.println("BYEBYE!");
+                        return;
+                    }
+                    case UNKNOWN: {
+                        throw new KongException("Sorry we do not recognise that command yet.");
+                    }
                 }
             } catch (KongException e) {
                 System.out.println(e.getMessage());
