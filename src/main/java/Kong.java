@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
@@ -16,7 +17,7 @@ public class Kong {
         String out = banner + line + "\n" + "Hello, I'm Kong.\nWhat can I do for you?";
         System.out.println(out);
 
-        ArrayList<Task> lst =  new ArrayList<>();
+        ArrayList<Task> lst = loadTasks();
 
         Scanner scanner = new Scanner(System.in);
         while (true) {
@@ -36,6 +37,7 @@ public class Kong {
                             throw new KongException("Invalid command. A todo command needs to be in the following format: todo <description>");
                         }
                         lst.add(new ToDo(arg));
+                        saveTasks(lst);
                         break;
                     }
                     case DEADLINE: {
@@ -48,6 +50,7 @@ public class Kong {
                                 throw new KongException("Invalid command. A deadline command needs to be in the following format: deadline <description> /by <date>");
                             }
                             lst.add(new Deadline(desc, by));
+                            saveTasks(lst);
                         } else {
                             throw new KongException("Invalid command. A deadline command needs to be in the following format: deadline <description> /by <date>");
                         }
@@ -64,6 +67,7 @@ public class Kong {
                                 throw new KongException("Invalid command. An event command needs to be in the following format: event <description> /from <date> /to <date>");
                             }
                             lst.add(new Event(desc, from, to));
+                            saveTasks(lst);
                         } else {
                             throw new KongException("Invalid command. An event command needs to be in the following format: event <description> /from <date> /to <date>");
                         }
@@ -83,6 +87,7 @@ public class Kong {
                     case MARK: {
                         try {
                             lst.get(Integer.parseInt(arg) - 1).mark();
+                            saveTasks(lst);
                         } catch (NumberFormatException e) {
                             throw new KongException("Invalid command. A mark command needs to be followed by a number.");
                         } catch (IndexOutOfBoundsException e) {
@@ -93,6 +98,7 @@ public class Kong {
                     case UNMARK: {
                         try {
                             lst.get(Integer.parseInt(arg) - 1).unmark();
+                            saveTasks(lst);
                         } catch (NumberFormatException e) {
                             throw new KongException("Invalid command. A unmark command needs to be followed by a number.");
                         } catch (IndexOutOfBoundsException e) {
@@ -107,6 +113,7 @@ public class Kong {
                             lst.remove(ix);
                             System.out.println("The following task have been removed.");
                             System.out.println(task.toString());
+                            saveTasks(lst);
                         } catch (NumberFormatException e) {
                             throw new KongException("Invalid command. A unmark command needs to be followed by a number.");
                         } catch (IndexOutOfBoundsException e) {
@@ -125,6 +132,23 @@ public class Kong {
             } catch (KongException e) {
                 System.out.println(e.getMessage());
             }
+        }
+    }
+
+    private static ArrayList<Task> loadTasks() {
+        try {
+            return Storage.loadTasks();
+        } catch (IOException e) {
+            System.out.println("Unable to load tasks from disk. Starting with an empty list.");
+            return new ArrayList<>();
+        }
+    }
+
+    private static void saveTasks(ArrayList<Task> tasks) throws KongException {
+        try {
+            Storage.saveTasks(tasks);
+        } catch (IOException e) {
+            throw new KongException("Unable to save tasks to disk.");
         }
     }
 }
