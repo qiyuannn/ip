@@ -79,19 +79,25 @@ public class Kong {
         if (description.isEmpty()) {
             throw new KongException("Invalid command. A todo command needs to be in the following format: todo <description>");
         }
-        tasks.add(new ToDo(description));
+        Task task = new ToDo(description);
+        tasks.add(task);
+        ui.showTaskAdded(task);
         saveTasks();
     }
 
     private void addDeadline(String arg) throws KongException {
         Parser.DeadlineDetails deadlineDetails = Parser.parseDeadline(arg);
-        tasks.add(new Deadline(deadlineDetails.getDescription(), deadlineDetails.getBy()));
+        Task task = new Deadline(deadlineDetails.getDescription(), deadlineDetails.getBy());
+        tasks.add(task);
+        ui.showTaskAdded(task);
         saveTasks();
     }
 
     private void addEvent(String arg) throws KongException {
         Parser.EventDetails eventDetails = Parser.parseEvent(arg);
-        tasks.add(new Event(eventDetails.getDescription(), eventDetails.getFrom(), eventDetails.getTo()));
+        Task task = new Event(eventDetails.getDescription(), eventDetails.getFrom(), eventDetails.getTo());
+        tasks.add(task);
+        ui.showTaskAdded(task);
         saveTasks();
     }
 
@@ -105,7 +111,9 @@ public class Kong {
 
     private void markTask(String arg) throws KongException {
         try {
-            tasks.get(parseTaskIndex(arg, "mark")).mark();
+            Task task = tasks.get(parseTaskIndex(arg, "mark"));
+            task.mark();
+            ui.showTaskMarked(task);
             saveTasks();
         } catch (IndexOutOfBoundsException e) {
             throw invalidTaskNumberException();
@@ -114,7 +122,9 @@ public class Kong {
 
     private void unmarkTask(String arg) throws KongException {
         try {
-            tasks.get(parseTaskIndex(arg, "unmark")).unmark();
+            Task task = tasks.get(parseTaskIndex(arg, "unmark"));
+            task.unmark();
+            ui.showTaskUnmarked(task);
             saveTasks();
         } catch (IndexOutOfBoundsException e) {
             throw invalidTaskNumberException();

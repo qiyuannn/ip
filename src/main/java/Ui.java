@@ -51,6 +51,25 @@ public class Ui {
         }
     }
 
+    public void showTaskAdded(Task task) {
+        if (task instanceof ToDo) {
+            System.out.println("Got it. I've added this task");
+        } else {
+            System.out.println("Got it. I've added this task.");
+        }
+        System.out.println(task.toString());
+    }
+
+    public void showTaskMarked(Task task) {
+        System.out.println("I've marked this task as done.");
+        System.out.println(task.toString());
+    }
+
+    public void showTaskUnmarked(Task task) {
+        System.out.println("I've marked this task as undone.");
+        System.out.println(task.toString());
+    }
+
     public void showTaskDeleted(Task task) {
         System.out.println("The following task have been removed.");
         System.out.println(task.toString());
