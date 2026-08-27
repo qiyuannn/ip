@@ -1,20 +1,10 @@
-public enum Command {
-    TODO,
-    DEADLINE,
-    EVENT,
-    LIST,
-    ON,
-    MARK,
-    UNMARK,
-    DELETE,
-    BYE,
-    UNKNOWN;
+/**
+ * Represents an executable user command.
+ */
+public abstract class Command {
+    public abstract void execute(TaskList tasks, Ui ui, Storage storage) throws KongException;
 
-    public static Command fromString(String command) {
-        try {
-            return Command.valueOf(command.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            return Command.UNKNOWN;
-        }
+    public boolean isExit() {
+        return false;
     }
 }

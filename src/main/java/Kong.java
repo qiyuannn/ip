@@ -21,7 +21,7 @@ public class Kong {
             ui.showLine();
             try {
                 Parser.ParsedCommand parsedCommand = Parser.parse(scanner.nextLine());
-                Command command = parsedCommand.getCommand();
+                CommandType command = parsedCommand.getCommand();
                 String arg = parsedCommand.getArg();
 
                 switch (command) {

@@ -19,7 +19,7 @@ public class Parser {
         }
 
         String[] parts = trimmedInput.split("\\s+", 2);
-        Command command = Command.fromString(parts[0]);
+        CommandType command = CommandType.fromString(parts[0]);
         String arg = parts.length > 1 ? parts[1] : "";
         return new ParsedCommand(command, arg);
     }
@@ -65,15 +65,15 @@ public class Parser {
      * The command word and the remaining argument text from a user input line.
      */
     public static class ParsedCommand {
-        private final Command command;
+        private final CommandType command;
         private final String arg;
 
-        public ParsedCommand(Command command, String arg) {
+        public ParsedCommand(CommandType command, String arg) {
             this.command = command;
             this.arg = arg;
         }
 
-        public Command getCommand() {
+        public CommandType getCommand() {
             return command;
         }
 
