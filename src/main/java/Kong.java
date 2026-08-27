@@ -3,11 +3,18 @@ import java.time.LocalDate;
 import java.util.Scanner;
 
 public class Kong {
-    public static void main(String[] args) {
-        Ui ui = new Ui();
-        ui.showWelcome();
+    private final Storage storage;
+    private final TaskList tasks;
+    private final Ui ui;
 
-        TaskList tasks = loadTasks(ui);
+    public Kong(String filePath) {
+        ui = new Ui();
+        storage = new Storage(filePath);
+        tasks = loadTasks();
+    }
+
+    public void run() {
+        ui.showWelcome();
 
         Scanner scanner = new Scanner(System.in);
         while (true) {
@@ -23,19 +30,19 @@ public class Kong {
                             throw new KongException("Invalid command. A todo command needs to be in the following format: todo <description>");
                         }
                         tasks.add(new ToDo(arg));
-                        saveTasks(tasks);
+                        saveTasks();
                         break;
                     }
                     case DEADLINE: {
                         Parser.DeadlineDetails deadlineDetails = Parser.parseDeadline(arg);
                         tasks.add(new Deadline(deadlineDetails.getDescription(), deadlineDetails.getBy()));
-                        saveTasks(tasks);
+                        saveTasks();
                         break;
                     }
                     case EVENT: {
                         Parser.EventDetails eventDetails = Parser.parseEvent(arg);
                         tasks.add(new Event(eventDetails.getDescription(), eventDetails.getFrom(), eventDetails.getTo()));
-                        saveTasks(tasks);
+                        saveTasks();
                         break;
                     }
                     case LIST: {
@@ -46,13 +53,13 @@ public class Kong {
                         if (arg.isEmpty()) {
                             throw new KongException("Invalid command. An on command needs to be in the following format: on <date>");
                         }
-                        printTasksOnDate(ui, tasks, Parser.parseDate(arg));
+                        printTasksOnDate(Parser.parseDate(arg));
                         break;
                     }
                     case MARK: {
                         try {
                             tasks.get(Integer.parseInt(arg) - 1).mark();
-                            saveTasks(tasks);
+                            saveTasks();
                         } catch (NumberFormatException e) {
                             throw new KongException("Invalid command. A mark command needs to be followed by a number.");
                         } catch (IndexOutOfBoundsException e) {
@@ -63,7 +70,7 @@ public class Kong {
                     case UNMARK: {
                         try {
                             tasks.get(Integer.parseInt(arg) - 1).unmark();
-                            saveTasks(tasks);
+                            saveTasks();
                         } catch (NumberFormatException e) {
                             throw new KongException("Invalid command. A unmark command needs to be followed by a number.");
                         } catch (IndexOutOfBoundsException e) {
@@ -76,7 +83,7 @@ public class Kong {
                             int ix = Integer.parseInt(arg) - 1;
                             Task task = tasks.remove(ix);
                             ui.showTaskDeleted(task);
-                            saveTasks(tasks);
+                            saveTasks();
                         } catch (NumberFormatException e) {
                             throw new KongException("Invalid command. A unmark command needs to be followed by a number.");
                         } catch (IndexOutOfBoundsException e) {
@@ -98,22 +105,26 @@ public class Kong {
         }
     }
 
-    private static void printTasksOnDate(Ui ui, TaskList tasks, LocalDate date) {
+    public static void main(String[] args) {
+        new Kong("data/duke.txt").run();
+    }
+
+    private void printTasksOnDate(LocalDate date) {
         ui.showTasksOnDate(tasks.getTasksOnDate(date));
     }
 
-    private static TaskList loadTasks(Ui ui) {
+    private TaskList loadTasks() {
         try {
-            return new TaskList(Storage.loadTasks());
+            return new TaskList(storage.loadTasks());
         } catch (IOException e) {
             ui.showLoadingError();
             return new TaskList();
         }
     }
 
-    private static void saveTasks(TaskList tasks) throws KongException {
+    private void saveTasks() throws KongException {
         try {
-            Storage.saveTasks(tasks.asList());
+            storage.saveTasks(tasks.asList());
         } catch (IOException e) {
             throw new KongException("Unable to save tasks to disk.");
         }

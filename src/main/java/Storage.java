@@ -7,18 +7,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Storage {
-    private static final Path FILE_PATH = Path.of("data", "duke.txt");
+    private final Path filePath;
 
-    public static ArrayList<Task> loadTasks() throws IOException {
+    public Storage(String filePath) {
+        this.filePath = Path.of(filePath);
+    }
+
+    public ArrayList<Task> loadTasks() throws IOException {
         ArrayList<Task> tasks = new ArrayList<>();
-        if (!Files.exists(FILE_PATH)) {
+        if (!Files.exists(filePath)) {
             return tasks;
         }
-        if (!Files.isRegularFile(FILE_PATH)) {
+        if (!Files.isRegularFile(filePath)) {
             throw new IOException("The data path is not a regular file.");
         }
 
-        List<String> lines = Files.readAllLines(FILE_PATH);
+        List<String> lines = Files.readAllLines(filePath);
         for (String line : lines) {
             Task task = parseTask(line);
             if (task != null) {
@@ -28,8 +32,8 @@ public class Storage {
         return tasks;
     }
 
-    public static void saveTasks(ArrayList<Task> tasks) throws IOException {
-        Path folderPath = FILE_PATH.getParent();
+    public void saveTasks(ArrayList<Task> tasks) throws IOException {
+        Path folderPath = filePath.getParent();
         if (folderPath != null) {
             Files.createDirectories(folderPath);
         }
@@ -38,7 +42,7 @@ public class Storage {
         for (Task task : tasks) {
             lines.add(task.toFileString());
         }
-        Files.write(FILE_PATH, lines);
+        Files.write(filePath, lines);
     }
 
     private static Task parseTask(String line) {
