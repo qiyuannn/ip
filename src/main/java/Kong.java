@@ -19,7 +19,7 @@ public class Kong {
         String out = banner + line + "\n" + "Hello, I'm Kong.\nWhat can I do for you?";
         System.out.println(out);
 
-        ArrayList<Task> lst = loadTasks();
+        TaskList tasks = loadTasks();
 
         Scanner scanner = new Scanner(System.in);
         while (true) {
@@ -38,8 +38,8 @@ public class Kong {
                         if (arg.isEmpty()) {
                             throw new KongException("Invalid command. A todo command needs to be in the following format: todo <description>");
                         }
-                        lst.add(new ToDo(arg));
-                        saveTasks(lst);
+                        tasks.add(new ToDo(arg));
+                        saveTasks(tasks);
                         break;
                     }
                     case DEADLINE: {
@@ -51,8 +51,8 @@ public class Kong {
                             if (desc.isEmpty() || by.isEmpty()) {
                                 throw new KongException("Invalid command. A deadline command needs to be in the following format: deadline <description> /by <date>");
                             }
-                            lst.add(new Deadline(desc, parseDate(by)));
-                            saveTasks(lst);
+                            tasks.add(new Deadline(desc, parseDate(by)));
+                            saveTasks(tasks);
                         } else {
                             throw new KongException("Invalid command. A deadline command needs to be in the following format: deadline <description> /by <date>");
                         }
@@ -68,18 +68,18 @@ public class Kong {
                             if (desc.isEmpty() || from.isEmpty() || to.isEmpty()) {
                                 throw new KongException("Invalid command. An event command needs to be in the following format: event <description> /from <date> /to <date>");
                             }
-                            lst.add(new Event(desc, parseDate(from), parseDate(to)));
-                            saveTasks(lst);
+                            tasks.add(new Event(desc, parseDate(from), parseDate(to)));
+                            saveTasks(tasks);
                         } else {
                             throw new KongException("Invalid command. An event command needs to be in the following format: event <description> /from <date> /to <date>");
                         }
                         break;
                     }
                     case LIST: {
-                        if (!lst.isEmpty()) {
+                        if (!tasks.isEmpty()) {
                             System.out.println("Here are the tasks in your list.");
-                            for (int i = 0; i < lst.size(); i++) {
-                                System.out.println(String.format("%d. %s", i + 1, lst.get(i).toString()));
+                            for (int i = 0; i < tasks.size(); i++) {
+                                System.out.println(String.format("%d. %s", i + 1, tasks.get(i).toString()));
                             }
                         } else {
                             System.out.println("There are currently no tasks in your list.");
@@ -90,43 +90,42 @@ public class Kong {
                         if (arg.isEmpty()) {
                             throw new KongException("Invalid command. An on command needs to be in the following format: on <date>");
                         }
-                        printTasksOnDate(lst, parseDate(arg));
+                        printTasksOnDate(tasks, parseDate(arg));
                         break;
                     }
                     case MARK: {
                         try {
-                            lst.get(Integer.parseInt(arg) - 1).mark();
-                            saveTasks(lst);
+                            tasks.get(Integer.parseInt(arg) - 1).mark();
+                            saveTasks(tasks);
                         } catch (NumberFormatException e) {
                             throw new KongException("Invalid command. A mark command needs to be followed by a number.");
                         } catch (IndexOutOfBoundsException e) {
-                            throw new KongException(String.format("This task number is invalid. You currently have %d tasks in your list.", lst.size()));
+                            throw new KongException(String.format("This task number is invalid. You currently have %d tasks in your list.", tasks.size()));
                         }
                         break;
                     }
                     case UNMARK: {
                         try {
-                            lst.get(Integer.parseInt(arg) - 1).unmark();
-                            saveTasks(lst);
+                            tasks.get(Integer.parseInt(arg) - 1).unmark();
+                            saveTasks(tasks);
                         } catch (NumberFormatException e) {
                             throw new KongException("Invalid command. A unmark command needs to be followed by a number.");
                         } catch (IndexOutOfBoundsException e) {
-                            throw new KongException(String.format("This task number is invalid. You currently have %d tasks in your list.", lst.size()));
+                            throw new KongException(String.format("This task number is invalid. You currently have %d tasks in your list.", tasks.size()));
                         }
                         break;
                     }
                     case DELETE: {
                         try {
                             int ix = Integer.parseInt(arg) - 1;
-                            Task task = lst.get(ix);
-                            lst.remove(ix);
+                            Task task = tasks.remove(ix);
                             System.out.println("The following task have been removed.");
                             System.out.println(task.toString());
-                            saveTasks(lst);
+                            saveTasks(tasks);
                         } catch (NumberFormatException e) {
                             throw new KongException("Invalid command. A unmark command needs to be followed by a number.");
                         } catch (IndexOutOfBoundsException e) {
-                            throw new KongException(String.format("This task number is invalid. You currently have %d tasks in your list.", lst.size()));
+                            throw new KongException(String.format("This task number is invalid. You currently have %d tasks in your list.", tasks.size()));
                         }
                         break;
                     }
@@ -144,14 +143,8 @@ public class Kong {
         }
     }
 
-    private static void printTasksOnDate(ArrayList<Task> tasks, LocalDate date) {
-        ArrayList<Task> matchingTasks = new ArrayList<>();
-        for (Task task : tasks) {
-            if (task.occursOn(date)) {
-                matchingTasks.add(task);
-            }
-        }
-
+    private static void printTasksOnDate(TaskList tasks, LocalDate date) {
+        ArrayList<Task> matchingTasks = tasks.getTasksOnDate(date);
         if (matchingTasks.isEmpty()) {
             System.out.println("There are no deadlines or events on this date.");
             return;
@@ -171,18 +164,18 @@ public class Kong {
         }
     }
 
-    private static ArrayList<Task> loadTasks() {
+    private static TaskList loadTasks() {
         try {
-            return Storage.loadTasks();
+            return new TaskList(Storage.loadTasks());
         } catch (IOException e) {
             System.out.println("Unable to load tasks from disk. Starting with an empty list.");
-            return new ArrayList<>();
+            return new TaskList();
         }
     }
 
-    private static void saveTasks(ArrayList<Task> tasks) throws KongException {
+    private static void saveTasks(TaskList tasks) throws KongException {
         try {
-            Storage.saveTasks(tasks);
+            Storage.saveTasks(tasks.asList());
         } catch (IOException e) {
             throw new KongException("Unable to save tasks to disk.");
         }
