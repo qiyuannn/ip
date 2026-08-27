@@ -1,5 +1,4 @@
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.Scanner;
 
 public class Kong {
@@ -42,7 +41,7 @@ public class Kong {
                         break;
                     }
                     case ON: {
-                        printTasksOnDate(arg);
+                        executeCommand(createOnDateCommand(arg));
                         break;
                     }
                     case MARK: {
@@ -101,12 +100,11 @@ public class Kong {
         return new EventCommand(eventDetails.getDescription(), eventDetails.getFrom(), eventDetails.getTo());
     }
 
-    private void printTasksOnDate(String arg) throws KongException {
+    private Command createOnDateCommand(String arg) throws KongException {
         if (arg.isEmpty()) {
             throw new KongException("Invalid command. An on command needs to be in the following format: on <date>");
         }
-        LocalDate date = Parser.parseDate(arg);
-        ui.showTasksOnDate(tasks.getTasksOnDate(date));
+        return new OnDateCommand(Parser.parseDate(arg));
     }
 
     private TaskList loadTasks() {
