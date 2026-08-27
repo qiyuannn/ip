@@ -227,3 +227,75 @@ bye
 Invalid date. Please use the format yyyy-MM-dd, for example 2019-10-15.
 BYEBYE!
 ```
+
+
+## TC12 Tasks on date
+
+**Aim:** Check that `on <date>` lists deadlines due on that date and events occurring on that date.
+
+### Input
+```text
+todo read book
+deadline return book /by 2019-10-15
+event conference /from 2019-10-14 /to 2019-10-16
+event holiday /from 2019-10-20 /to 2019-10-21
+on 2019-10-15
+bye
+```
+
+### Expected Output
+```text
+Here are the deadlines and events on this date.
+1. [D][ ] return book (by: Oct 15 2019)
+2. [E][ ] conference (from: Oct 14 2019 to: Oct 16 2019)
+BYEBYE!
+```
+
+## TC13 No tasks on date
+
+**Aim:** Check that `on <date>` gives a clear message when no deadlines or events occur on that date.
+
+### Input
+```text
+deadline return book /by 2019-10-15
+on 2019-10-16
+bye
+```
+
+### Expected Output
+```text
+There are no deadlines or events on this date.
+BYEBYE!
+```
+
+## TC14 Invalid on date
+
+**Aim:** Check that `on <date>` requires the `yyyy-MM-dd` date format.
+
+### Input
+```text
+on tomorrow
+bye
+```
+
+### Expected Output
+```text
+Invalid date. Please use the format yyyy-MM-dd, for example 2019-10-15.
+BYEBYE!
+```
+
+## TC15 Empty on date
+
+**Aim:** Check that `on` without a date is rejected.
+
+### Input
+```text
+on
+bye
+```
+
+### Expected Output
+```text
+Invalid command. An on command needs to be in the following format: on <date>
+BYEBYE!
+```

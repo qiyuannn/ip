@@ -86,6 +86,13 @@ public class Kong {
                         }
                         break;
                     }
+                    case ON: {
+                        if (arg.isEmpty()) {
+                            throw new KongException("Invalid command. An on command needs to be in the following format: on <date>");
+                        }
+                        printTasksOnDate(lst, parseDate(arg));
+                        break;
+                    }
                     case MARK: {
                         try {
                             lst.get(Integer.parseInt(arg) - 1).mark();
@@ -134,6 +141,25 @@ public class Kong {
             } catch (KongException e) {
                 System.out.println(e.getMessage());
             }
+        }
+    }
+
+    private static void printTasksOnDate(ArrayList<Task> tasks, LocalDate date) {
+        ArrayList<Task> matchingTasks = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task.occursOn(date)) {
+                matchingTasks.add(task);
+            }
+        }
+
+        if (matchingTasks.isEmpty()) {
+            System.out.println("There are no deadlines or events on this date.");
+            return;
+        }
+
+        System.out.println("Here are the deadlines and events on this date.");
+        for (int i = 0; i < matchingTasks.size(); i++) {
+            System.out.println(String.format("%d. %s", i + 1, matchingTasks.get(i).toString()));
         }
     }
 
