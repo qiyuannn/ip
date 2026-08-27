@@ -1,10 +1,7 @@
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 import java.util.ArrayList;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
 
 public class Kong {
     public static void main(String[] args) {
@@ -25,13 +22,9 @@ public class Kong {
         while (true) {
             System.out.println(line);
             try {
-                String input = scanner.nextLine().trim();
-                if (input.isEmpty()) {
-                    throw new KongException("Please enter a command.");
-                }
-                String[] parts = input.split("\\s+", 2);
-                Command command = Command.fromString(parts[0]);
-                String arg = parts.length > 1 ? parts[1] : "";
+                Parser.ParsedCommand parsedCommand = Parser.parse(scanner.nextLine());
+                Command command = parsedCommand.getCommand();
+                String arg = parsedCommand.getArg();
 
                 switch (command) {
                     case TODO: {
@@ -43,36 +36,15 @@ public class Kong {
                         break;
                     }
                     case DEADLINE: {
-                        Pattern pattern = Pattern.compile("^(.*?)\\s*/by\\s+(.*)$", Pattern.CASE_INSENSITIVE);
-                        Matcher matcher = pattern.matcher(arg);
-                        if (matcher.find()) {
-                            String desc = matcher.group(1);
-                            String by = matcher.group(2);
-                            if (desc.isEmpty() || by.isEmpty()) {
-                                throw new KongException("Invalid command. A deadline command needs to be in the following format: deadline <description> /by <date>");
-                            }
-                            tasks.add(new Deadline(desc, parseDate(by)));
-                            saveTasks(tasks);
-                        } else {
-                            throw new KongException("Invalid command. A deadline command needs to be in the following format: deadline <description> /by <date>");
-                        }
+                        Parser.DeadlineDetails deadlineDetails = Parser.parseDeadline(arg);
+                        tasks.add(new Deadline(deadlineDetails.getDescription(), deadlineDetails.getBy()));
+                        saveTasks(tasks);
                         break;
                     }
                     case EVENT: {
-                        Pattern pattern = Pattern.compile("^(.*?)\\s*/from\\s+(.*?)\\s*/to\\s+(.*)$", Pattern.CASE_INSENSITIVE);
-                        Matcher matcher = pattern.matcher(arg);
-                        if (matcher.find()) {
-                            String desc = matcher.group(1);
-                            String from = matcher.group(2);
-                            String to = matcher.group(3);
-                            if (desc.isEmpty() || from.isEmpty() || to.isEmpty()) {
-                                throw new KongException("Invalid command. An event command needs to be in the following format: event <description> /from <date> /to <date>");
-                            }
-                            tasks.add(new Event(desc, parseDate(from), parseDate(to)));
-                            saveTasks(tasks);
-                        } else {
-                            throw new KongException("Invalid command. An event command needs to be in the following format: event <description> /from <date> /to <date>");
-                        }
+                        Parser.EventDetails eventDetails = Parser.parseEvent(arg);
+                        tasks.add(new Event(eventDetails.getDescription(), eventDetails.getFrom(), eventDetails.getTo()));
+                        saveTasks(tasks);
                         break;
                     }
                     case LIST: {
@@ -90,7 +62,7 @@ public class Kong {
                         if (arg.isEmpty()) {
                             throw new KongException("Invalid command. An on command needs to be in the following format: on <date>");
                         }
-                        printTasksOnDate(tasks, parseDate(arg));
+                        printTasksOnDate(tasks, Parser.parseDate(arg));
                         break;
                     }
                     case MARK: {
@@ -153,14 +125,6 @@ public class Kong {
         System.out.println("Here are the deadlines and events on this date.");
         for (int i = 0; i < matchingTasks.size(); i++) {
             System.out.println(String.format("%d. %s", i + 1, matchingTasks.get(i).toString()));
-        }
-    }
-
-    private static LocalDate parseDate(String dateText) throws KongException {
-        try {
-            return LocalDate.parse(dateText);
-        } catch (DateTimeParseException e) {
-            throw new KongException("Invalid date. Please use the format yyyy-MM-dd, for example 2019-10-15.");
         }
     }
 
