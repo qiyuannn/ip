@@ -46,15 +46,15 @@ public class Kong {
                         break;
                     }
                     case MARK: {
-                        markTask(arg);
+                        executeCommand(new MarkCommand(arg));
                         break;
                     }
                     case UNMARK: {
-                        unmarkTask(arg);
+                        executeCommand(new UnmarkCommand(arg));
                         break;
                     }
                     case DELETE: {
-                        deleteTask(arg);
+                        executeCommand(new DeleteCommand(arg));
                         break;
                     }
                     case BYE: {
@@ -107,52 +107,6 @@ public class Kong {
         }
         LocalDate date = Parser.parseDate(arg);
         ui.showTasksOnDate(tasks.getTasksOnDate(date));
-    }
-
-    private void markTask(String arg) throws KongException {
-        try {
-            Task task = tasks.get(parseTaskIndex(arg, "mark"));
-            task.mark();
-            ui.showTaskMarked(task);
-            saveTasks();
-        } catch (IndexOutOfBoundsException e) {
-            throw invalidTaskNumberException();
-        }
-    }
-
-    private void unmarkTask(String arg) throws KongException {
-        try {
-            Task task = tasks.get(parseTaskIndex(arg, "unmark"));
-            task.unmark();
-            ui.showTaskUnmarked(task);
-            saveTasks();
-        } catch (IndexOutOfBoundsException e) {
-            throw invalidTaskNumberException();
-        }
-    }
-
-    private void deleteTask(String arg) throws KongException {
-        try {
-            Task task = tasks.remove(parseTaskIndex(arg, "unmark"));
-            ui.showTaskDeleted(task);
-            saveTasks();
-        } catch (IndexOutOfBoundsException e) {
-            throw invalidTaskNumberException();
-        }
-    }
-
-    private int parseTaskIndex(String arg, String commandName) throws KongException {
-        try {
-            return Integer.parseInt(arg) - 1;
-        } catch (NumberFormatException e) {
-            throw new KongException(String.format("Invalid command. A %s command needs to be followed by a number.",
-                    commandName));
-        }
-    }
-
-    private KongException invalidTaskNumberException() {
-        return new KongException(String.format("This task number is invalid. You currently have %d tasks in your list.",
-                tasks.size()));
     }
 
     private TaskList loadTasks() {

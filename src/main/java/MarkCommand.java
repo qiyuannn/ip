@@ -1,0 +1,22 @@
+/**
+ * Marks a task as done.
+ */
+public class MarkCommand extends Command {
+    private final String taskNumber;
+
+    public MarkCommand(String taskNumber) {
+        this.taskNumber = taskNumber;
+    }
+
+    @Override
+    public void execute(TaskList tasks, Ui ui, Storage storage) throws KongException {
+        try {
+            Task task = tasks.get(parseTaskIndex(taskNumber, "mark"));
+            task.mark();
+            ui.showTaskMarked(task);
+            saveTasks(tasks, storage);
+        } catch (IndexOutOfBoundsException e) {
+            throw invalidTaskNumberException(tasks);
+        }
+    }
+}
