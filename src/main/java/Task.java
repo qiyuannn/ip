@@ -1,3 +1,5 @@
+import java.time.LocalDate;
+
 public class Task {
     private String description;
     private boolean done = false;
@@ -28,6 +30,10 @@ public class Task {
 
     public String toFileString() {
         return String.format("? | %s | %s", this.getDoneStatus(), this.description);
+    }
+
+    public boolean occursOn(LocalDate date) {
+        return false;
     }
 
     @Override

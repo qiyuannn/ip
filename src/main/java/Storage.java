@@ -1,6 +1,8 @@
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,17 +67,20 @@ public class Storage {
                 return new ToDo(description, isDone);
             case "D":
                 String by = getPart(parts, 3);
-                if (parts.length != 4 || by == null || by.isEmpty()) {
+                LocalDate byDate = parseDate(by);
+                if (parts.length != 4 || byDate == null) {
                     return null;
                 }
-                return new Deadline(description, isDone, by);
+                return new Deadline(description, isDone, byDate);
             case "E":
                 String from = getPart(parts, 3);
                 String to = getPart(parts, 4);
-                if (parts.length != 5 || from == null || from.isEmpty() || to == null || to.isEmpty()) {
+                LocalDate fromDate = parseDate(from);
+                LocalDate toDate = parseDate(to);
+                if (parts.length != 5 || fromDate == null || toDate == null) {
                     return null;
                 }
-                return new Event(description, isDone, from, to);
+                return new Event(description, isDone, fromDate, toDate);
             default:
                 return null;
         }
@@ -96,5 +101,16 @@ public class Storage {
             return false;
         }
         return null;
+    }
+
+    private static LocalDate parseDate(String dateText) {
+        if (dateText == null || dateText.isEmpty()) {
+            return null;
+        }
+        try {
+            return LocalDate.parse(dateText);
+        } catch (DateTimeParseException e) {
+            return null;
+        }
     }
 }

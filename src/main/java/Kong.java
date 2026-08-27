@@ -1,4 +1,6 @@
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
@@ -49,7 +51,7 @@ public class Kong {
                             if (desc.isEmpty() || by.isEmpty()) {
                                 throw new KongException("Invalid command. A deadline command needs to be in the following format: deadline <description> /by <date>");
                             }
-                            lst.add(new Deadline(desc, by));
+                            lst.add(new Deadline(desc, parseDate(by)));
                             saveTasks(lst);
                         } else {
                             throw new KongException("Invalid command. A deadline command needs to be in the following format: deadline <description> /by <date>");
@@ -66,7 +68,7 @@ public class Kong {
                             if (desc.isEmpty() || from.isEmpty() || to.isEmpty()) {
                                 throw new KongException("Invalid command. An event command needs to be in the following format: event <description> /from <date> /to <date>");
                             }
-                            lst.add(new Event(desc, from, to));
+                            lst.add(new Event(desc, parseDate(from), parseDate(to)));
                             saveTasks(lst);
                         } else {
                             throw new KongException("Invalid command. An event command needs to be in the following format: event <description> /from <date> /to <date>");
@@ -82,6 +84,13 @@ public class Kong {
                         } else {
                             System.out.println("There are currently no tasks in your list.");
                         }
+                        break;
+                    }
+                    case ON: {
+                        if (arg.isEmpty()) {
+                            throw new KongException("Invalid command. An on command needs to be in the following format: on <date>");
+                        }
+                        printTasksOnDate(lst, parseDate(arg));
                         break;
                     }
                     case MARK: {
@@ -132,6 +141,33 @@ public class Kong {
             } catch (KongException e) {
                 System.out.println(e.getMessage());
             }
+        }
+    }
+
+    private static void printTasksOnDate(ArrayList<Task> tasks, LocalDate date) {
+        ArrayList<Task> matchingTasks = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task.occursOn(date)) {
+                matchingTasks.add(task);
+            }
+        }
+
+        if (matchingTasks.isEmpty()) {
+            System.out.println("There are no deadlines or events on this date.");
+            return;
+        }
+
+        System.out.println("Here are the deadlines and events on this date.");
+        for (int i = 0; i < matchingTasks.size(); i++) {
+            System.out.println(String.format("%d. %s", i + 1, matchingTasks.get(i).toString()));
+        }
+    }
+
+    private static LocalDate parseDate(String dateText) throws KongException {
+        try {
+            return LocalDate.parse(dateText);
+        } catch (DateTimeParseException e) {
+            throw new KongException("Invalid date. Please use the format yyyy-MM-dd, for example 2019-10-15.");
         }
     }
 
