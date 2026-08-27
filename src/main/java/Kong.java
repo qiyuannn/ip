@@ -1,26 +1,17 @@
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Scanner;
-import java.util.ArrayList;
 
 public class Kong {
     public static void main(String[] args) {
-        String banner = " _  __                 \n"
-                + "| |/ /___  _ __   __ _ \n"
-                + "| ' // _ \\| '_ \\ / _` |\n"
-                + "| . \\ (_) | | | | (_| |\n"
-                + "|_|\\_\\___/|_| |_|\\__, |\n"
-                + "                 |___/ \n";
+        Ui ui = new Ui();
+        ui.showWelcome();
 
-        String line = "________________________________________";
-        String out = banner + line + "\n" + "Hello, I'm Kong.\nWhat can I do for you?";
-        System.out.println(out);
-
-        TaskList tasks = loadTasks();
+        TaskList tasks = loadTasks(ui);
 
         Scanner scanner = new Scanner(System.in);
         while (true) {
-            System.out.println(line);
+            ui.showLine();
             try {
                 Parser.ParsedCommand parsedCommand = Parser.parse(scanner.nextLine());
                 Command command = parsedCommand.getCommand();
@@ -48,21 +39,14 @@ public class Kong {
                         break;
                     }
                     case LIST: {
-                        if (!tasks.isEmpty()) {
-                            System.out.println("Here are the tasks in your list.");
-                            for (int i = 0; i < tasks.size(); i++) {
-                                System.out.println(String.format("%d. %s", i + 1, tasks.get(i).toString()));
-                            }
-                        } else {
-                            System.out.println("There are currently no tasks in your list.");
-                        }
+                        ui.showTaskList(tasks);
                         break;
                     }
                     case ON: {
                         if (arg.isEmpty()) {
                             throw new KongException("Invalid command. An on command needs to be in the following format: on <date>");
                         }
-                        printTasksOnDate(tasks, Parser.parseDate(arg));
+                        printTasksOnDate(ui, tasks, Parser.parseDate(arg));
                         break;
                     }
                     case MARK: {
@@ -91,8 +75,7 @@ public class Kong {
                         try {
                             int ix = Integer.parseInt(arg) - 1;
                             Task task = tasks.remove(ix);
-                            System.out.println("The following task have been removed.");
-                            System.out.println(task.toString());
+                            ui.showTaskDeleted(task);
                             saveTasks(tasks);
                         } catch (NumberFormatException e) {
                             throw new KongException("Invalid command. A unmark command needs to be followed by a number.");
@@ -102,7 +85,7 @@ public class Kong {
                         break;
                     }
                     case BYE: {
-                        System.out.println("BYEBYE!");
+                        ui.showGoodbye();
                         return;
                     }
                     case UNKNOWN: {
@@ -110,29 +93,20 @@ public class Kong {
                     }
                 }
             } catch (KongException e) {
-                System.out.println(e.getMessage());
+                ui.showError(e.getMessage());
             }
         }
     }
 
-    private static void printTasksOnDate(TaskList tasks, LocalDate date) {
-        ArrayList<Task> matchingTasks = tasks.getTasksOnDate(date);
-        if (matchingTasks.isEmpty()) {
-            System.out.println("There are no deadlines or events on this date.");
-            return;
-        }
-
-        System.out.println("Here are the deadlines and events on this date.");
-        for (int i = 0; i < matchingTasks.size(); i++) {
-            System.out.println(String.format("%d. %s", i + 1, matchingTasks.get(i).toString()));
-        }
+    private static void printTasksOnDate(Ui ui, TaskList tasks, LocalDate date) {
+        ui.showTasksOnDate(tasks.getTasksOnDate(date));
     }
 
-    private static TaskList loadTasks() {
+    private static TaskList loadTasks(Ui ui) {
         try {
             return new TaskList(Storage.loadTasks());
         } catch (IOException e) {
-            System.out.println("Unable to load tasks from disk. Starting with an empty list.");
+            ui.showLoadingError();
             return new TaskList();
         }
     }
