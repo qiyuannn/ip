@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -14,7 +15,8 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[4]
 PLAN_PATH = PROJECT_ROOT / "test" / "ui-test-plan.md"
 JAVA_SRC = PROJECT_ROOT / "src" / "main" / "java"
-SAVED_FILE = PROJECT_ROOT / "data" / "duke.txt"
+DATA_FOLDER = PROJECT_ROOT / "data"
+SAVED_FILE = DATA_FOLDER / "duke.txt"
 
 
 @dataclass
@@ -80,10 +82,10 @@ def compile_sources(build_dir: Path) -> None:
 
 
 def run_case(build_dir: Path, test_case: TestCase) -> str:
-    if SAVED_FILE.exists():
-        SAVED_FILE.unlink()
+    if DATA_FOLDER.exists():
+        shutil.rmtree(DATA_FOLDER)
     if test_case.initial_saved_file is not None:
-        SAVED_FILE.parent.mkdir(parents=True, exist_ok=True)
+        DATA_FOLDER.mkdir(parents=True, exist_ok=True)
         SAVED_FILE.write_text(test_case.initial_saved_file.strip() + "\n", encoding="utf-8")
 
     input_text = test_case.inputs

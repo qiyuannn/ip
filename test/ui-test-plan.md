@@ -146,3 +146,51 @@ Here are the tasks in your list.
 3. [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
 BYEBYE!
 ```
+
+
+## TC8 Missing data folder starts empty
+
+**Aim:** Check that Kong starts with an empty list when `data/duke.txt` and the `data` folder do not exist.
+
+### Input
+```text
+list
+bye
+```
+
+### Expected Output
+```text
+There are currently no tasks in your list.
+BYEBYE!
+```
+
+
+## TC9 Invalid saved lines are skipped
+
+**Aim:** Check that malformed saved lines are ignored while valid saved tasks are still loaded.
+
+### Initial Saved File
+```text
+
+T | 1 | read book
+X | 0 | mystery task
+D | maybe | return book | June 6th
+D | 0 |
+E | 0 | project meeting | Aug 6th 2pm | 4pm
+E | 0 | missing end | tomorrow
+T | 0 | too | many
+```
+
+### Input
+```text
+list
+bye
+```
+
+### Expected Output
+```text
+Here are the tasks in your list.
+1. [T][X] read book
+2. [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+BYEBYE!
+```
