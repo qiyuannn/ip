@@ -38,7 +38,7 @@ public class Kong {
                         break;
                     }
                     case LIST: {
-                        ui.showTaskList(tasks);
+                        executeCommand(new ListCommand());
                         break;
                     }
                     case ON: {
@@ -58,11 +58,16 @@ public class Kong {
                         break;
                     }
                     case BYE: {
-                        ui.showGoodbye();
-                        return;
+                        Command exitCommand = new ExitCommand();
+                        executeCommand(exitCommand);
+                        if (exitCommand.isExit()) {
+                            return;
+                        }
+                        break;
                     }
                     case UNKNOWN: {
-                        throw new KongException("Sorry we do not recognise that command yet.");
+                        executeCommand(new UnknownCommand());
+                        break;
                     }
                 }
             } catch (KongException e) {
@@ -73,6 +78,10 @@ public class Kong {
 
     public static void main(String[] args) {
         new Kong("data/duke.txt").run();
+    }
+
+    private void executeCommand(Command command) throws KongException {
+        command.execute(tasks, ui, storage);
     }
 
     private void addTodo(String description) throws KongException {
