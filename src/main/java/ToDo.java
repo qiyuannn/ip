@@ -1,8 +1,18 @@
 public class ToDo extends Task{
     public ToDo(String desc) {
-        super(desc);
-        System.out.println("Got it. I've added this task");
-        System.out.println(this.toString());
+        this(desc, false, true);
+    }
+
+    public ToDo(String desc, boolean done) {
+        this(desc, done, false);
+    }
+
+    private ToDo(String desc, boolean done, boolean shouldPrint) {
+        super(desc, done);
+        if (shouldPrint) {
+            System.out.println("Got it. I've added this task");
+            System.out.println(this.toString());
+        }
     }
 
     @Override
@@ -22,5 +32,10 @@ public class ToDo extends Task{
     @Override
     public String toString() {
         return String.format("[T]%s", super.toString());
+    }
+
+    @Override
+    public String toFileString() {
+        return String.format("T | %s | %s", this.getDoneStatus(), this.getDescription());
     }
 }

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -14,6 +15,8 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[4]
 PLAN_PATH = PROJECT_ROOT / "test" / "ui-test-plan.md"
 JAVA_SRC = PROJECT_ROOT / "src" / "main" / "java"
+DATA_FOLDER = PROJECT_ROOT / "data"
+SAVED_FILE = DATA_FOLDER / "duke.txt"
 
 
 @dataclass
@@ -22,6 +25,8 @@ class TestCase:
     aim: str
     inputs: str
     expected: str
+    initial_saved_file: str | None
+    expected_saved_file: str | None
 
 
 def extract_section(body: str, heading: str) -> str:
@@ -29,6 +34,14 @@ def extract_section(body: str, heading: str) -> str:
     match = re.search(pattern, body, re.DOTALL)
     if not match:
         raise ValueError(f"Missing section: {heading}")
+    return match.group(1)
+
+
+def extract_optional_section(body: str, heading: str) -> str | None:
+    pattern = rf"### {re.escape(heading)}\s*```(?:text)?\n(.*?)\n```"
+    match = re.search(pattern, body, re.DOTALL)
+    if not match:
+        return None
     return match.group(1)
 
 
@@ -52,6 +65,8 @@ def parse_plan() -> list[TestCase]:
                 aim=aim_match.group(1).strip(),
                 inputs=extract_section(body, "Input"),
                 expected=extract_section(body, "Expected Output"),
+                initial_saved_file=extract_optional_section(body, "Initial Saved File"),
+                expected_saved_file=extract_optional_section(body, "Expected Saved File"),
             )
         )
 
@@ -67,6 +82,12 @@ def compile_sources(build_dir: Path) -> None:
 
 
 def run_case(build_dir: Path, test_case: TestCase) -> str:
+    if DATA_FOLDER.exists():
+        shutil.rmtree(DATA_FOLDER)
+    if test_case.initial_saved_file is not None:
+        DATA_FOLDER.mkdir(parents=True, exist_ok=True)
+        SAVED_FILE.write_text(test_case.initial_saved_file.strip() + "\n", encoding="utf-8")
+
     input_text = test_case.inputs
     if not input_text.endswith("\n"):
         input_text += "\n"
@@ -95,6 +116,21 @@ def assert_expected_output(actual: str, expected: str) -> str | None:
     return None
 
 
+def assert_expected_saved_file(test_case: TestCase) -> str | None:
+    if test_case.expected_saved_file is None:
+        return None
+
+    if not SAVED_FILE.exists():
+        return "Expected data/duke.txt to exist, but it was not created."
+
+    actual = SAVED_FILE.read_text(encoding="utf-8").strip()
+    expected = test_case.expected_saved_file.strip()
+    if actual != expected:
+        return f"Expected saved file:\n{expected}\n\nActual saved file:\n{actual}"
+
+    return None
+
+
 def print_transcript(test_case: TestCase, actual: str) -> None:
     print(f"## {test_case.name}")
     print(f"Aim: {test_case.aim}")
@@ -108,6 +144,18 @@ def print_transcript(test_case: TestCase, actual: str) -> None:
     print("```text")
     print(actual.rstrip())
     print("```")
+    if test_case.initial_saved_file is not None:
+        print()
+        print("Initial saved file:")
+        print("```text")
+        print(test_case.initial_saved_file.strip())
+        print("```")
+    if test_case.expected_saved_file is not None:
+        print()
+        print("Saved file:")
+        print("```text")
+        print(SAVED_FILE.read_text(encoding="utf-8").strip())
+        print("```")
     print()
 
 
@@ -121,6 +169,7 @@ def main() -> int:
             for test_case in test_cases:
                 actual = run_case(build_dir, test_case)
                 missing = assert_expected_output(actual, test_case.expected)
+                saved_file_mismatch = assert_expected_saved_file(test_case)
                 print_transcript(test_case, actual)
 
                 if missing is not None:
@@ -136,6 +185,13 @@ def main() -> int:
                     print("```text")
                     print(test_case.expected)
                     print("```")
+                    return 1
+
+                if saved_file_mismatch is not None:
+                    print("TEST FAILED")
+                    print(f"Failed test case: {test_case.name}")
+                    print()
+                    print(saved_file_mismatch)
                     return 1
 
                 print("Result: PASS")
