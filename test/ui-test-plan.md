@@ -92,8 +92,8 @@ BYEBYE!
 ### Input
 ```text
 todo read book
-deadline return book /by June 6th
-event project meeting /from Aug 6th 2pm /to 4pm
+deadline return book /by 2019-10-15
+event project meeting /from 2019-10-15 /to 2019-10-16
 mark 1
 delete 2
 bye
@@ -104,20 +104,20 @@ bye
 Got it. I've added this task
 [T][ ] read book
 Got it. I've added this task.
-[D][ ] return book (by: June 6th)
+[D][ ] return book (by: Oct 15 2019)
 Got it. I've added this task.
-[E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+[E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)
 I've marked this task as done.
 [T][X] read book
 The following task have been removed.
-[D][ ] return book (by: June 6th)
+[D][ ] return book (by: Oct 15 2019)
 BYEBYE!
 ```
 
 ### Expected Saved File
 ```text
 T | 1 | read book
-E | 0 | project meeting | Aug 6th 2pm | 4pm
+E | 0 | project meeting | 2019-10-15 | 2019-10-16
 ```
 
 
@@ -128,8 +128,8 @@ E | 0 | project meeting | Aug 6th 2pm | 4pm
 ### Initial Saved File
 ```text
 T | 1 | read book
-D | 0 | return book | June 6th
-E | 0 | project meeting | Aug 6th 2pm | 4pm
+D | 0 | return book | 2019-10-15
+E | 0 | project meeting | 2019-10-15 | 2019-10-16
 ```
 
 ### Input
@@ -142,8 +142,8 @@ bye
 ```text
 Here are the tasks in your list.
 1. [T][X] read book
-2. [D][ ] return book (by: June 6th)
-3. [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+2. [D][ ] return book (by: Oct 15 2019)
+3. [E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)
 BYEBYE!
 ```
 
@@ -174,10 +174,10 @@ BYEBYE!
 
 T | 1 | read book
 X | 0 | mystery task
-D | maybe | return book | June 6th
+D | maybe | return book | 2019-10-15
 D | 0 |
-E | 0 | project meeting | Aug 6th 2pm | 4pm
-E | 0 | missing end | tomorrow
+E | 0 | project meeting | 2019-10-15 | 2019-10-16
+E | 0 | missing end | 2019-10-15
 T | 0 | too | many
 ```
 
@@ -191,6 +191,39 @@ bye
 ```text
 Here are the tasks in your list.
 1. [T][X] read book
-2. [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+2. [E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)
+BYEBYE!
+```
+
+
+## TC10 Invalid deadline date
+
+**Aim:** Check that deadline dates must use `yyyy-MM-dd`.
+
+### Input
+```text
+deadline return book /by tomorrow
+bye
+```
+
+### Expected Output
+```text
+Invalid date. Please use the format yyyy-MM-dd, for example 2019-10-15.
+BYEBYE!
+```
+
+## TC11 Invalid event date
+
+**Aim:** Check that event dates must use `yyyy-MM-dd`.
+
+### Input
+```text
+event project meeting /from 2019-10-15 /to tomorrow
+bye
+```
+
+### Expected Output
+```text
+Invalid date. Please use the format yyyy-MM-dd, for example 2019-10-15.
 BYEBYE!
 ```

@@ -1,4 +1,6 @@
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
@@ -49,7 +51,7 @@ public class Kong {
                             if (desc.isEmpty() || by.isEmpty()) {
                                 throw new KongException("Invalid command. A deadline command needs to be in the following format: deadline <description> /by <date>");
                             }
-                            lst.add(new Deadline(desc, by));
+                            lst.add(new Deadline(desc, parseDate(by)));
                             saveTasks(lst);
                         } else {
                             throw new KongException("Invalid command. A deadline command needs to be in the following format: deadline <description> /by <date>");
@@ -66,7 +68,7 @@ public class Kong {
                             if (desc.isEmpty() || from.isEmpty() || to.isEmpty()) {
                                 throw new KongException("Invalid command. An event command needs to be in the following format: event <description> /from <date> /to <date>");
                             }
-                            lst.add(new Event(desc, from, to));
+                            lst.add(new Event(desc, parseDate(from), parseDate(to)));
                             saveTasks(lst);
                         } else {
                             throw new KongException("Invalid command. An event command needs to be in the following format: event <description> /from <date> /to <date>");
@@ -132,6 +134,14 @@ public class Kong {
             } catch (KongException e) {
                 System.out.println(e.getMessage());
             }
+        }
+    }
+
+    private static LocalDate parseDate(String dateText) throws KongException {
+        try {
+            return LocalDate.parse(dateText);
+        } catch (DateTimeParseException e) {
+            throw new KongException("Invalid date. Please use the format yyyy-MM-dd, for example 2019-10-15.");
         }
     }
 

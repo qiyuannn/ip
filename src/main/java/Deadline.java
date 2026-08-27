@@ -1,15 +1,21 @@
-public class Deadline extends Task {
-    private String by;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
-    public Deadline(String desc, String by) {
+public class Deadline extends Task {
+    private static final DateTimeFormatter DISPLAY_DATE_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy", Locale.ENGLISH);
+
+    private LocalDate by;
+
+    public Deadline(String desc, LocalDate by) {
         this(desc, false, by, true);
     }
 
-    public Deadline(String desc, boolean done, String by) {
+    public Deadline(String desc, boolean done, LocalDate by) {
         this(desc, done, by, false);
     }
 
-    private Deadline(String desc, boolean done, String by, boolean shouldPrint) {
+    private Deadline(String desc, boolean done, LocalDate by, boolean shouldPrint) {
         super(desc, done);
         this.by = by;
         if (shouldPrint) {
@@ -32,7 +38,7 @@ public class Deadline extends Task {
 
     @Override
     public String toString() {
-        return String.format("[D]%s (by: %s)", super.toString(), this.by);
+        return String.format("[D]%s (by: %s)", super.toString(), this.by.format(DISPLAY_DATE_FORMAT));
     }
 
     @Override
