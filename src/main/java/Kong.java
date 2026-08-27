@@ -26,15 +26,15 @@ public class Kong {
 
                 switch (command) {
                     case TODO: {
-                        addTodo(arg);
+                        executeCommand(createTodoCommand(arg));
                         break;
                     }
                     case DEADLINE: {
-                        addDeadline(arg);
+                        executeCommand(createDeadlineCommand(arg));
                         break;
                     }
                     case EVENT: {
-                        addEvent(arg);
+                        executeCommand(createEventCommand(arg));
                         break;
                     }
                     case LIST: {
@@ -84,30 +84,21 @@ public class Kong {
         command.execute(tasks, ui, storage);
     }
 
-    private void addTodo(String description) throws KongException {
+    private Command createTodoCommand(String description) throws KongException {
         if (description.isEmpty()) {
             throw new KongException("Invalid command. A todo command needs to be in the following format: todo <description>");
         }
-        Task task = new ToDo(description);
-        tasks.add(task);
-        ui.showTaskAdded(task);
-        saveTasks();
+        return new TodoCommand(description);
     }
 
-    private void addDeadline(String arg) throws KongException {
+    private Command createDeadlineCommand(String arg) throws KongException {
         Parser.DeadlineDetails deadlineDetails = Parser.parseDeadline(arg);
-        Task task = new Deadline(deadlineDetails.getDescription(), deadlineDetails.getBy());
-        tasks.add(task);
-        ui.showTaskAdded(task);
-        saveTasks();
+        return new DeadlineCommand(deadlineDetails.getDescription(), deadlineDetails.getBy());
     }
 
-    private void addEvent(String arg) throws KongException {
+    private Command createEventCommand(String arg) throws KongException {
         Parser.EventDetails eventDetails = Parser.parseEvent(arg);
-        Task task = new Event(eventDetails.getDescription(), eventDetails.getFrom(), eventDetails.getTo());
-        tasks.add(task);
-        ui.showTaskAdded(task);
-        saveTasks();
+        return new EventCommand(eventDetails.getDescription(), eventDetails.getFrom(), eventDetails.getTo());
     }
 
     private void printTasksOnDate(String arg) throws KongException {
