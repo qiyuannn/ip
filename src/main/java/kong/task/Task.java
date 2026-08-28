@@ -1,3 +1,5 @@
+package kong.task;
+
 import java.time.LocalDate;
 
 public class Task {

@@ -77,7 +77,7 @@ def parse_plan() -> list[TestCase]:
 
 
 def compile_sources(build_dir: Path) -> None:
-    sources = sorted(str(path) for path in JAVA_SRC.glob("*.java"))
+    sources = sorted(str(path) for path in JAVA_SRC.rglob("*.java"))
     subprocess.run(["javac", "-d", str(build_dir), *sources], check=True, cwd=PROJECT_ROOT)
 
 
@@ -93,7 +93,7 @@ def run_case(build_dir: Path, test_case: TestCase) -> str:
         input_text += "\n"
 
     result = subprocess.run(
-        ["java", "-cp", str(build_dir), "Kong"],
+        ["java", "-cp", str(build_dir), "kong.Kong"],
         input=input_text,
         text=True,
         capture_output=True,

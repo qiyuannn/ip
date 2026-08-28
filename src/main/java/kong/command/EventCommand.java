@@ -1,4 +1,13 @@
+package kong.command;
+
 import java.time.LocalDate;
+
+import kong.exception.KongException;
+import kong.storage.Storage;
+import kong.task.Event;
+import kong.task.Task;
+import kong.task.TaskList;
+import kong.ui.Ui;
 
 /**
  * Adds an event task to the task list.

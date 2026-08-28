@@ -1,3 +1,12 @@
+package kong.command;
+
+import kong.exception.KongException;
+import kong.storage.Storage;
+import kong.task.Task;
+import kong.task.TaskList;
+import kong.task.ToDo;
+import kong.ui.Ui;
+
 /**
  * Adds a todo task to the task list.
  */
