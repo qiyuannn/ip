@@ -10,9 +10,9 @@ import org.junit.jupiter.api.Test;
 
 class TaskListTest {
     @Test
-    void getTasksOnDate_tasksWithDifferentDates_returnsOnlyMatchingDeadlineAndEvent() {
+    void getTasksOnDateReturnsOnlyMatchingDeadlineAndEvent() {
         TaskList tasks = new TaskList();
-        Task todo = new ToDo("read book");
+        Task todo = new Todo("read book");
         Task deadline = new Deadline("return book", LocalDate.parse("2019-10-15"));
         Task matchingEvent = new Event("conference", LocalDate.parse("2019-10-14"), LocalDate.parse("2019-10-16"));
         Task nonMatchingEvent = new Event("holiday", LocalDate.parse("2019-10-20"), LocalDate.parse("2019-10-21"));
@@ -27,10 +27,10 @@ class TaskListTest {
     }
 
     @Test
-    void addAndRemove_tasksAreStoredAndRemovedInOrder() {
+    void addAndRemoveStoreAndRemoveTasksInOrder() {
         TaskList tasks = new TaskList();
-        Task firstTask = new ToDo("first");
-        Task secondTask = new ToDo("second");
+        Task firstTask = new Todo("first");
+        Task secondTask = new Todo("second");
 
         assertTrue(tasks.isEmpty());
         tasks.add(firstTask);

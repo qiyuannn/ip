@@ -20,7 +20,7 @@ import kong.exception.KongException;
 
 class ParserTest {
     @Test
-    void parse_validCommands_returnsCorrespondingCommandType() throws KongException {
+    void parseReturnsCorrespondingCommandTypeForValidCommands() throws KongException {
         assertInstanceOf(TodoCommand.class, Parser.parse("todo read book"));
         assertInstanceOf(DeadlineCommand.class, Parser.parse("deadline return book /by 2019-10-15"));
         assertInstanceOf(EventCommand.class, Parser.parse("event conference /from 2019-10-14 /to 2019-10-16"));
@@ -34,28 +34,31 @@ class ParserTest {
     }
 
     @Test
-    void parse_commandWordsWithDifferentCasing_returnsCorrespondingCommandType() throws KongException {
+    void parseReturnsCorrespondingCommandTypeForDifferentCasing() throws KongException {
         assertInstanceOf(TodoCommand.class, Parser.parse("ToDo read book"));
         assertInstanceOf(ExitCommand.class, Parser.parse("BYE"));
     }
 
     @Test
-    void parse_blankInput_throwsHelpfulException() {
+    void parseThrowsHelpfulExceptionForBlankInput() {
         KongException exception = assertThrows(KongException.class, () -> Parser.parse("   "));
 
         assertEquals("Please enter a command.", exception.getMessage());
     }
 
     @Test
-    void parse_missingRequiredArguments_throwsHelpfulException() {
-        assertParseError("todo", "Invalid command. A todo command needs to be in the following format: todo <description>");
-        assertParseError("deadline return book", "Invalid command. A deadline command needs to be in the following format: deadline <description> /by <date>");
-        assertParseError("event conference /from 2019-10-14", "Invalid command. An event command needs to be in the following format: event <description> /from <date> /to <date>");
+    void parseThrowsHelpfulExceptionForMissingRequiredArguments() {
+        assertParseError("todo", "Invalid command. A todo command needs to be in the following format: "
+                + "todo <description>");
+        assertParseError("deadline return book", "Invalid command. A deadline command needs to be in the following "
+                + "format: deadline <description> /by <date>");
+        assertParseError("event conference /from 2019-10-14", "Invalid command. An event command needs to be in the "
+                + "following format: event <description> /from <date> /to <date>");
         assertParseError("on", "Invalid command. An on command needs to be in the following format: on <date>");
     }
 
     @Test
-    void parse_invalidDates_throwsHelpfulException() {
+    void parseThrowsHelpfulExceptionForInvalidDates() {
         String expectedMessage = "Invalid date. Please use the format yyyy-MM-dd, for example 2019-10-15.";
 
         assertParseError("deadline return book /by tomorrow", expectedMessage);

@@ -4,8 +4,12 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
-public class Event extends Task{
-    private static final DateTimeFormatter DISPLAY_DATE_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy", Locale.ENGLISH);
+/**
+ * Represents a task occurring over an inclusive date range.
+ */
+public class Event extends Task {
+    private static final DateTimeFormatter DISPLAY_DATE_FORMAT =
+            DateTimeFormatter.ofPattern("MMM dd yyyy", Locale.ENGLISH);
 
     private LocalDate from;
     private LocalDate to;
@@ -16,8 +20,8 @@ public class Event extends Task{
         this.to = to;
     }
 
-    public Event(String desc, boolean done, LocalDate from, LocalDate to) {
-        super(desc, done);
+    public Event(String desc, boolean isDone, LocalDate from, LocalDate to) {
+        super(desc, isDone);
         this.from = from;
         this.to = to;
     }

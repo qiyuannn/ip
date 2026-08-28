@@ -11,8 +11,10 @@ import kong.ui.Ui;
  * Represents an executable user command.
  */
 public abstract class Command {
+    /** Executes this command against the current task list. */
     public abstract void execute(TaskList tasks, Ui ui, Storage storage) throws KongException;
 
+    /** Returns whether this command should end the application. */
     public boolean isExit() {
         return false;
     }

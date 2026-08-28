@@ -17,6 +17,7 @@ public class TaskList {
         this.tasks = tasks;
     }
 
+    /** Adds a task to the end of the list. */
     public void add(Task task) {
         tasks.add(task);
     }
@@ -25,6 +26,7 @@ public class TaskList {
         return tasks.get(index);
     }
 
+    /** Removes and returns the task at the specified zero-based index. */
     public Task remove(int index) {
         return tasks.remove(index);
     }
@@ -37,6 +39,7 @@ public class TaskList {
         return tasks.isEmpty();
     }
 
+    /** Returns the task collection for persistence. */
     public ArrayList<Task> asList() {
         return tasks;
     }

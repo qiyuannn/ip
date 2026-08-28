@@ -9,6 +9,9 @@ import kong.storage.Storage;
 import kong.task.TaskList;
 import kong.ui.Ui;
 
+/**
+ * Coordinates the task list, persistent storage, command parsing, and console UI.
+ */
 public class Kong {
     private final Storage storage;
     private final TaskList tasks;
@@ -20,6 +23,7 @@ public class Kong {
         tasks = loadTasks();
     }
 
+    /** Runs the command loop until the user exits. */
     public void run() {
         ui.showWelcome();
 
@@ -39,6 +43,7 @@ public class Kong {
         }
     }
 
+    /** Starts Kong using its default data file. */
     public static void main(String[] args) {
         new Kong("data/duke.txt").run();
     }

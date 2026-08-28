@@ -11,8 +11,11 @@ import java.util.List;
 import kong.task.Deadline;
 import kong.task.Event;
 import kong.task.Task;
-import kong.task.ToDo;
+import kong.task.Todo;
 
+/**
+ * Loads and saves tasks using Kong's pipe-delimited data format.
+ */
 public class Storage {
     private final Path filePath;
 
@@ -20,6 +23,12 @@ public class Storage {
         this.filePath = Path.of(filePath);
     }
 
+    /**
+     * Loads valid tasks from disk while skipping malformed records.
+     *
+     * @return loaded tasks, or an empty list when the data file does not exist
+     * @throws IOException if the data path cannot be read as a regular file
+     */
     public ArrayList<Task> loadTasks() throws IOException {
         ArrayList<Task> tasks = new ArrayList<>();
         if (!Files.exists(filePath)) {
@@ -39,6 +48,11 @@ public class Storage {
         return tasks;
     }
 
+    /**
+     * Replaces the data file with the current tasks.
+     *
+     * @throws IOException if the data file cannot be written
+     */
     public void saveTasks(ArrayList<Task> tasks) throws IOException {
         Path folderPath = filePath.getParent();
         if (folderPath != null) {
@@ -75,7 +89,7 @@ public class Storage {
                 if (parts.length != 3) {
                     return null;
                 }
-                return new ToDo(description, isDone);
+                return new Todo(description, isDone);
             case "D":
                 String by = getPart(parts, 3);
                 LocalDate byDate = parseDate(by);

@@ -22,11 +22,25 @@ import kong.exception.KongException;
  * Makes sense of user command text and turns it into structured values.
  */
 public class Parser {
+    private static final String ERROR_TODO_FORMAT =
+            "Invalid command. A todo command needs to be in the following format: todo <description>";
+    private static final String ERROR_DEADLINE_FORMAT =
+            "Invalid command. A deadline command needs to be in the following format: "
+                    + "deadline <description> /by <date>";
+    private static final String ERROR_EVENT_FORMAT =
+            "Invalid command. An event command needs to be in the following format: "
+                    + "event <description> /from <date> /to <date>";
     private static final Pattern DEADLINE_PATTERN = Pattern.compile("^(.*?)\\s*/by\\s+(.*)$",
             Pattern.CASE_INSENSITIVE);
     private static final Pattern EVENT_PATTERN = Pattern.compile("^(.*?)\\s*/from\\s+(.*?)\\s*/to\\s+(.*)$",
             Pattern.CASE_INSENSITIVE);
 
+    /**
+     * Parses a user-entered line into an executable command.
+     *
+     * @return command represented by the input
+     * @throws KongException if a recognized command has invalid arguments
+     */
     public static Command parse(String input) throws KongException {
         String trimmedInput = input.trim();
         if (trimmedInput.isEmpty()) {
@@ -65,7 +79,7 @@ public class Parser {
 
     private static Command createTodoCommand(String description) throws KongException {
         if (description.isEmpty()) {
-            throw new KongException("Invalid command. A todo command needs to be in the following format: todo <description>");
+            throw new KongException(ERROR_TODO_FORMAT);
         }
         return new TodoCommand(description);
     }
@@ -90,13 +104,13 @@ public class Parser {
     private static DeadlineDetails parseDeadline(String arg) throws KongException {
         Matcher matcher = DEADLINE_PATTERN.matcher(arg);
         if (!matcher.find()) {
-            throw new KongException("Invalid command. A deadline command needs to be in the following format: deadline <description> /by <date>");
+            throw new KongException(ERROR_DEADLINE_FORMAT);
         }
 
         String description = matcher.group(1);
         String by = matcher.group(2);
         if (description.isEmpty() || by.isEmpty()) {
-            throw new KongException("Invalid command. A deadline command needs to be in the following format: deadline <description> /by <date>");
+            throw new KongException(ERROR_DEADLINE_FORMAT);
         }
         return new DeadlineDetails(description, parseDate(by));
     }
@@ -104,14 +118,14 @@ public class Parser {
     private static EventDetails parseEvent(String arg) throws KongException {
         Matcher matcher = EVENT_PATTERN.matcher(arg);
         if (!matcher.find()) {
-            throw new KongException("Invalid command. An event command needs to be in the following format: event <description> /from <date> /to <date>");
+            throw new KongException(ERROR_EVENT_FORMAT);
         }
 
         String description = matcher.group(1);
         String from = matcher.group(2);
         String to = matcher.group(3);
         if (description.isEmpty() || from.isEmpty() || to.isEmpty()) {
-            throw new KongException("Invalid command. An event command needs to be in the following format: event <description> /from <date> /to <date>");
+            throw new KongException(ERROR_EVENT_FORMAT);
         }
         return new EventDetails(description, parseDate(from), parseDate(to));
     }
