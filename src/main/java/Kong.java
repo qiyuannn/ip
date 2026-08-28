@@ -16,24 +16,22 @@ public class Kong {
 
         boolean isExit = false;
         while (!isExit) {
-            ui.showLine();
             try {
                 String fullCommand = ui.readCommand();
+                ui.showLine();
                 Command command = Parser.parse(fullCommand);
-                executeCommand(command);
+                command.execute(tasks, ui, storage);
                 isExit = command.isExit();
             } catch (KongException e) {
                 ui.showError(e.getMessage());
+            } finally {
+                ui.showLine();
             }
         }
     }
 
     public static void main(String[] args) {
         new Kong("data/duke.txt").run();
-    }
-
-    private void executeCommand(Command command) throws KongException {
-        command.execute(tasks, ui, storage);
     }
 
     private TaskList loadTasks() {
