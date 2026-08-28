@@ -33,4 +33,18 @@ class EventTest {
 
         assertEquals(expected, event.occursOn(LocalDate.parse(dateText)));
     }
+
+    @ParameterizedTest
+    @CsvSource({
+            "false, [E][ ] conference (from: Oct 14 2019 to: Oct 16 2019), E | 0 | conference | 2019-10-14 | 2019-10-16",
+            "true, [E][X] conference (from: Oct 14 2019 to: Oct 16 2019), E | 1 | conference | 2019-10-14 | 2019-10-16"
+    })
+    void displayAndStorageFormats_doneStatusIsShownConsistently(boolean done, String expectedDisplay,
+                                                                  String expectedFileText) {
+        Event event = new Event("conference", done, LocalDate.parse("2019-10-14"),
+                LocalDate.parse("2019-10-16"));
+
+        assertEquals(expectedDisplay, event.toString());
+        assertEquals(expectedFileText, event.toFileString());
+    }
 }

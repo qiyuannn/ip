@@ -36,6 +36,8 @@ Do not commit or push unless explicitly asked.
 
 ## Testing after code updates
 
+Maintain JUnit coverage for roughly the top 50% of highest-value methods. Prioritize core business logic, complex branching, parsing, persistence, and other behavior where a regression would affect users or their data. Update the relevant JUnit tests after every code change so this target continues to be met.
+
 After each code update, check whether `test/ui-test-plan.md` needs to be updated to cover the changed behavior. If the code change affects console input/output, commands, error messages, or chatbot behavior, update the test plan before testing.
 
 After each code update, invoke the project-specific `test-ui` skill and run the UI tests using:
