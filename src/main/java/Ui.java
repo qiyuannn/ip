@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * Handles interactions with the user through the console.
@@ -11,6 +12,11 @@ public class Ui {
             + "| . \\ (_) | | | | (_| |\n"
             + "|_|\\_\\___/|_| |_|\\__, |\n"
             + "                 |___/ \n";
+    private final Scanner scanner;
+
+    public Ui() {
+        scanner = new Scanner(System.in);
+    }
 
     public void showWelcome() {
         System.out.println(BANNER + LINE + "\n" + "Hello, I'm Kong.\nWhat can I do for you?");
@@ -18,6 +24,10 @@ public class Ui {
 
     public void showLine() {
         System.out.println(LINE);
+    }
+
+    public String readCommand() {
+        return scanner.nextLine();
     }
 
     public void showError(String message) {

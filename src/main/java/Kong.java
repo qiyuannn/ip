@@ -1,5 +1,4 @@
 import java.io.IOException;
-import java.util.Scanner;
 
 public class Kong {
     private final Storage storage;
@@ -15,15 +14,14 @@ public class Kong {
     public void run() {
         ui.showWelcome();
 
-        Scanner scanner = new Scanner(System.in);
-        while (true) {
+        boolean isExit = false;
+        while (!isExit) {
             ui.showLine();
             try {
-                Command command = Parser.parse(scanner.nextLine());
+                String fullCommand = ui.readCommand();
+                Command command = Parser.parse(fullCommand);
                 executeCommand(command);
-                if (command.isExit()) {
-                    return;
-                }
+                isExit = command.isExit();
             } catch (KongException e) {
                 ui.showError(e.getMessage());
             }
