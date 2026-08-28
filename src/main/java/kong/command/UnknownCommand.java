@@ -1,3 +1,10 @@
+package kong.command;
+
+import kong.exception.KongException;
+import kong.storage.Storage;
+import kong.task.TaskList;
+import kong.ui.Ui;
+
 /**
  * Represents a command word that Kong does not understand.
  */

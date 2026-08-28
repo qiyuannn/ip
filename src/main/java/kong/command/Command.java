@@ -1,4 +1,11 @@
+package kong.command;
+
 import java.io.IOException;
+
+import kong.exception.KongException;
+import kong.storage.Storage;
+import kong.task.TaskList;
+import kong.ui.Ui;
 
 /**
  * Represents an executable user command.

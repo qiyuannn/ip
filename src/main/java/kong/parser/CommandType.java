@@ -1,3 +1,5 @@
+package kong.parser;
+
 public enum CommandType {
     TODO,
     DEADLINE,

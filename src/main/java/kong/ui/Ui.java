@@ -1,5 +1,11 @@
+package kong.ui;
+
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import kong.task.Task;
+import kong.task.TaskList;
+import kong.task.ToDo;
 
 /**
  * Handles interactions with the user through the console.

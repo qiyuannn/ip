@@ -1,4 +1,13 @@
+package kong;
+
 import java.io.IOException;
+
+import kong.command.Command;
+import kong.exception.KongException;
+import kong.parser.Parser;
+import kong.storage.Storage;
+import kong.task.TaskList;
+import kong.ui.Ui;
 
 public class Kong {
     private final Storage storage;
