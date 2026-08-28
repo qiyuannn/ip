@@ -17,12 +17,20 @@ public class EventCommand extends Command {
     private final LocalDate from;
     private final LocalDate to;
 
+    /**
+     * Creates a command that adds an event.
+     *
+     * @param description task description
+     * @param from first date of the event
+     * @param to last date of the event
+     */
     public EventCommand(String description, LocalDate from, LocalDate to) {
         this.description = description;
         this.from = from;
         this.to = to;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws KongException {
         Task task = new Event(description, from, to);

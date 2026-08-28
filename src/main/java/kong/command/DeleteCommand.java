@@ -12,10 +12,16 @@ import kong.ui.Ui;
 public class DeleteCommand extends Command {
     private final String taskNumber;
 
+    /**
+     * Creates a command that removes the specified task.
+     *
+     * @param taskNumber one-based task number entered by the user
+     */
     public DeleteCommand(String taskNumber) {
         this.taskNumber = taskNumber;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws KongException {
         try {

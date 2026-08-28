@@ -12,10 +12,16 @@ import kong.ui.Ui;
 public class OnDateCommand extends Command {
     private final LocalDate date;
 
+    /**
+     * Creates a command that lists tasks occurring on a date.
+     *
+     * @param date date to query
+     */
     public OnDateCommand(LocalDate date) {
         this.date = date;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {
         ui.showTasksOnDate(tasks.getTasksOnDate(date));

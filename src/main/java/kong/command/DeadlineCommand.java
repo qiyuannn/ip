@@ -16,11 +16,18 @@ public class DeadlineCommand extends Command {
     private final String description;
     private final LocalDate by;
 
+    /**
+     * Creates a command that adds a deadline.
+     *
+     * @param description task description
+     * @param by deadline date
+     */
     public DeadlineCommand(String description, LocalDate by) {
         this.description = description;
         this.by = by;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws KongException {
         Task task = new Deadline(description, by);
