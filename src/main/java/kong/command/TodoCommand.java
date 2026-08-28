@@ -13,10 +13,16 @@ import kong.ui.Ui;
 public class TodoCommand extends Command {
     private final String description;
 
+    /**
+     * Creates a command that adds a todo.
+     *
+     * @param description task description
+     */
     public TodoCommand(String description) {
         this.description = description;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws KongException {
         Task task = new ToDo(description);

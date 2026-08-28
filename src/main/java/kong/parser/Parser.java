@@ -27,6 +27,17 @@ public class Parser {
     private static final Pattern EVENT_PATTERN = Pattern.compile("^(.*?)\\s*/from\\s+(.*?)\\s*/to\\s+(.*)$",
             Pattern.CASE_INSENSITIVE);
 
+    /** Creates a parser. */
+    public Parser() {
+    }
+
+    /**
+     * Parses a complete input line into an executable command.
+     *
+     * @param input user-entered command line
+     * @return command represented by the input
+     * @throws KongException if a recognized command has invalid arguments
+     */
     public static Command parse(String input) throws KongException {
         String trimmedInput = input.trim();
         if (trimmedInput.isEmpty()) {
@@ -63,6 +74,7 @@ public class Parser {
         }
     }
 
+    /** Creates a todo command after validating its description. */
     private static Command createTodoCommand(String description) throws KongException {
         if (description.isEmpty()) {
             throw new KongException("Invalid command. A todo command needs to be in the following format: todo <description>");
@@ -70,16 +82,19 @@ public class Parser {
         return new TodoCommand(description);
     }
 
+    /** Creates a deadline command from its structured arguments. */
     private static Command createDeadlineCommand(String arg) throws KongException {
         DeadlineDetails deadlineDetails = parseDeadline(arg);
         return new DeadlineCommand(deadlineDetails.getDescription(), deadlineDetails.getBy());
     }
 
+    /** Creates an event command from its structured arguments. */
     private static Command createEventCommand(String arg) throws KongException {
         EventDetails eventDetails = parseEvent(arg);
         return new EventCommand(eventDetails.getDescription(), eventDetails.getFrom(), eventDetails.getTo());
     }
 
+    /** Creates a date-query command after validating its date argument. */
     private static Command createOnDateCommand(String arg) throws KongException {
         if (arg.isEmpty()) {
             throw new KongException("Invalid command. An on command needs to be in the following format: on <date>");
@@ -87,6 +102,13 @@ public class Parser {
         return new OnDateCommand(parseDate(arg));
     }
 
+    /**
+     * Extracts the description and due date from deadline arguments.
+     *
+     * @param arg text following the deadline command word
+     * @return validated deadline details
+     * @throws KongException if the arguments do not match the required format
+     */
     private static DeadlineDetails parseDeadline(String arg) throws KongException {
         Matcher matcher = DEADLINE_PATTERN.matcher(arg);
         if (!matcher.find()) {
@@ -101,6 +123,13 @@ public class Parser {
         return new DeadlineDetails(description, parseDate(by));
     }
 
+    /**
+     * Extracts the description and date range from event arguments.
+     *
+     * @param arg text following the event command word
+     * @return validated event details
+     * @throws KongException if the arguments do not match the required format
+     */
     private static EventDetails parseEvent(String arg) throws KongException {
         Matcher matcher = EVENT_PATTERN.matcher(arg);
         if (!matcher.find()) {
@@ -116,6 +145,13 @@ public class Parser {
         return new EventDetails(description, parseDate(from), parseDate(to));
     }
 
+    /**
+     * Parses a date in ISO {@code yyyy-MM-dd} format.
+     *
+     * @param dateText date entered by the user
+     * @return parsed date
+     * @throws KongException if the text is not a valid ISO date
+     */
     private static LocalDate parseDate(String dateText) throws KongException {
         try {
             return LocalDate.parse(dateText);
@@ -131,15 +167,18 @@ public class Parser {
         private final String description;
         private final LocalDate by;
 
+        /** Creates a parsed deadline value. */
         public DeadlineDetails(String description, LocalDate by) {
             this.description = description;
             this.by = by;
         }
 
+        /** @return parsed task description */
         public String getDescription() {
             return description;
         }
 
+        /** @return parsed due date */
         public LocalDate getBy() {
             return by;
         }
@@ -153,20 +192,24 @@ public class Parser {
         private final LocalDate from;
         private final LocalDate to;
 
+        /** Creates a parsed event value. */
         public EventDetails(String description, LocalDate from, LocalDate to) {
             this.description = description;
             this.from = from;
             this.to = to;
         }
 
+        /** @return parsed task description */
         public String getDescription() {
             return description;
         }
 
+        /** @return parsed first date */
         public LocalDate getFrom() {
             return from;
         }
 
+        /** @return parsed last date */
         public LocalDate getTo() {
             return to;
         }

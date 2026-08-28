@@ -12,10 +12,16 @@ import kong.ui.Ui;
 public class UnmarkCommand extends Command {
     private final String taskNumber;
 
+    /**
+     * Creates a command that marks the specified task as not done.
+     *
+     * @param taskNumber one-based task number entered by the user
+     */
     public UnmarkCommand(String taskNumber) {
         this.taskNumber = taskNumber;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws KongException {
         try {
