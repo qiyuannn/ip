@@ -2,6 +2,7 @@ package kong.task;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * Holds the user's tasks and provides operations on the task collection.
@@ -89,6 +90,20 @@ public class TaskList {
         ArrayList<Task> matchingTasks = new ArrayList<>();
         for (Task task : tasks) {
             if (task.occursOn(date)) {
+                matchingTasks.add(task);
+            }
+        }
+        return matchingTasks;
+    }
+
+    /**
+     * Returns tasks whose descriptions contain the keyword, ignoring letter case.
+     */
+    public ArrayList<Task> findTasks(String keyword) {
+        String normalizedKeyword = keyword.toLowerCase(Locale.ROOT);
+        ArrayList<Task> matchingTasks = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task.getDescription().toLowerCase(Locale.ROOT).contains(normalizedKeyword)) {
                 matchingTasks.add(task);
             }
         }

@@ -314,3 +314,57 @@ bye
 BYEBYE!
 ________________________________________
 ```
+
+## TC17 Find matching tasks
+
+**Aim:** Check that `find <keyword>` lists matching task descriptions in list order, regardless of case.
+
+### Input
+```text
+todo read book
+deadline return book /by 2019-10-15
+event project meeting /from 2019-10-15 /to 2019-10-16
+find BOOK
+bye
+```
+
+### Expected Output
+```text
+Here are the matching tasks in your list:
+1. [T][ ] read book
+2. [D][ ] return book (by: Oct 15 2019)
+BYEBYE!
+```
+
+## TC18 No matching tasks
+
+**Aim:** Check that `find <keyword>` gives a clear message when no task descriptions match.
+
+### Input
+```text
+todo read book
+find movie
+bye
+```
+
+### Expected Output
+```text
+There are no matching tasks in your list.
+BYEBYE!
+```
+
+## TC19 Empty find keyword
+
+**Aim:** Check that `find` without a keyword is rejected.
+
+### Input
+```text
+find
+bye
+```
+
+### Expected Output
+```text
+Invalid command. A find command needs to be in the following format: find <keyword>
+BYEBYE!
+```

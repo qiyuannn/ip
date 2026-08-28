@@ -42,4 +42,21 @@ class TaskListTest {
         assertEquals(secondTask, tasks.get(0));
         assertFalse(tasks.isEmpty());
     }
+
+    @Test
+    void findTasks_descriptionsWithDifferentCasing_returnsMatchesInListOrder() {
+        TaskList tasks = new TaskList();
+        Task firstMatch = new Todo("read Book");
+        Task nonMatch = new Event("project meeting", LocalDate.parse("2019-10-14"),
+                LocalDate.parse("2019-10-16"));
+        Task secondMatch = new Deadline("return book", LocalDate.parse("2019-10-15"));
+        tasks.add(firstMatch);
+        tasks.add(nonMatch);
+        tasks.add(secondMatch);
+
+        assertEquals(2, tasks.findTasks("BOOK").size());
+        assertEquals(firstMatch, tasks.findTasks("BOOK").get(0));
+        assertEquals(secondMatch, tasks.findTasks("BOOK").get(1));
+        assertTrue(tasks.findTasks("movie").isEmpty());
+    }
 }

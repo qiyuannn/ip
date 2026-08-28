@@ -10,6 +10,7 @@ import kong.command.DeadlineCommand;
 import kong.command.DeleteCommand;
 import kong.command.EventCommand;
 import kong.command.ExitCommand;
+import kong.command.FindCommand;
 import kong.command.ListCommand;
 import kong.command.MarkCommand;
 import kong.command.OnDateCommand;
@@ -30,6 +31,8 @@ public class Parser {
     private static final String ERROR_EVENT_FORMAT =
             "Invalid command. An event command needs to be in the following format: "
                     + "event <description> /from <date> /to <date>";
+    private static final String ERROR_FIND_FORMAT =
+            "Invalid command. A find command needs to be in the following format: find <keyword>";
     private static final Pattern DEADLINE_PATTERN = Pattern.compile("^(.*?)\\s*/by\\s+(.*)$",
             Pattern.CASE_INSENSITIVE);
     private static final Pattern EVENT_PATTERN = Pattern.compile("^(.*?)\\s*/from\\s+(.*?)\\s*/to\\s+(.*)$",
@@ -65,6 +68,8 @@ public class Parser {
                 return createEventCommand(arg);
             case LIST:
                 return new ListCommand();
+            case FIND:
+                return createFindCommand(arg);
             case ON:
                 return createOnDateCommand(arg);
             case MARK:
@@ -108,6 +113,14 @@ public class Parser {
             throw new KongException("Invalid command. An on command needs to be in the following format: on <date>");
         }
         return new OnDateCommand(parseDate(arg));
+    }
+
+    /** Creates a find command after validating its keyword. */
+    private static Command createFindCommand(String keyword) throws KongException {
+        if (keyword.isEmpty()) {
+            throw new KongException(ERROR_FIND_FORMAT);
+        }
+        return new FindCommand(keyword);
     }
 
     /**

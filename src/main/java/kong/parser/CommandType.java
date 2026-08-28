@@ -12,6 +12,8 @@ public enum CommandType {
     EVENT,
     /** Lists all tasks. */
     LIST,
+    /** Finds tasks containing a keyword. */
+    FIND,
     /** Lists tasks occurring on a date. */
     ON,
     /** Marks a task as complete. */
