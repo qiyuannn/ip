@@ -299,3 +299,18 @@ bye
 Invalid command. An on command needs to be in the following format: on <date>
 BYEBYE!
 ```
+
+## TC16 Divider after exit
+
+**Aim:** Check that Kong prints the divider line after the exit command finishes.
+
+### Input
+```text
+bye
+```
+
+### Expected Output
+```text
+BYEBYE!
+________________________________________
+```

@@ -9,36 +9,15 @@ public class Event extends Task{
     private LocalDate to;
 
     public Event(String desc, LocalDate from, LocalDate to) {
-        this(desc, false, from, to, true);
+        super(desc);
+        this.from = from;
+        this.to = to;
     }
 
     public Event(String desc, boolean done, LocalDate from, LocalDate to) {
-        this(desc, done, from, to, false);
-    }
-
-    private Event(String desc, boolean done, LocalDate from, LocalDate to, boolean shouldPrint) {
         super(desc, done);
         this.from = from;
         this.to = to;
-
-        if (shouldPrint) {
-            System.out.println("Got it. I've added this task.");
-            System.out.println(this.toString());
-        }
-    }
-
-    @Override
-    public void mark() {
-        super.mark();
-        System.out.println("I've marked this task as done.");
-        System.out.println(this.toString());
-    }
-
-    @Override
-    public void unmark() {
-        super.unmark();
-        System.out.println("I've marked this task as undone.");
-        System.out.println(this.toString());
     }
 
     @Override
