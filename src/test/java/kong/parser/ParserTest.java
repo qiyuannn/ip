@@ -10,6 +10,7 @@ import kong.command.DeadlineCommand;
 import kong.command.DeleteCommand;
 import kong.command.EventCommand;
 import kong.command.ExitCommand;
+import kong.command.FindCommand;
 import kong.command.ListCommand;
 import kong.command.MarkCommand;
 import kong.command.OnDateCommand;
@@ -25,6 +26,7 @@ class ParserTest {
         assertInstanceOf(DeadlineCommand.class, Parser.parse("deadline return book /by 2019-10-15"));
         assertInstanceOf(EventCommand.class, Parser.parse("event conference /from 2019-10-14 /to 2019-10-16"));
         assertInstanceOf(ListCommand.class, Parser.parse("list"));
+        assertInstanceOf(FindCommand.class, Parser.parse("find book"));
         assertInstanceOf(OnDateCommand.class, Parser.parse("on 2019-10-15"));
         assertInstanceOf(MarkCommand.class, Parser.parse("mark 1"));
         assertInstanceOf(UnmarkCommand.class, Parser.parse("unmark 1"));
@@ -48,10 +50,15 @@ class ParserTest {
 
     @Test
     void parse_missingRequiredArguments_throwsHelpfulException() {
-        assertParseError("todo", "Invalid command. A todo command needs to be in the following format: todo <description>");
-        assertParseError("deadline return book", "Invalid command. A deadline command needs to be in the following format: deadline <description> /by <date>");
-        assertParseError("event conference /from 2019-10-14", "Invalid command. An event command needs to be in the following format: event <description> /from <date> /to <date>");
+        assertParseError("todo", "Invalid command. A todo command needs to be in the following format: "
+                + "todo <description>");
+        assertParseError("deadline return book", "Invalid command. A deadline command needs to be in the following "
+                + "format: deadline <description> /by <date>");
+        assertParseError("event conference /from 2019-10-14", "Invalid command. An event command needs to be in the "
+                + "following format: event <description> /from <date> /to <date>");
         assertParseError("on", "Invalid command. An on command needs to be in the following format: on <date>");
+        assertParseError("find",
+                "Invalid command. A find command needs to be in the following format: find <keyword>");
     }
 
     @Test
