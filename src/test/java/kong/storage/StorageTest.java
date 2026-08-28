@@ -16,25 +16,25 @@ import org.junit.jupiter.api.io.TempDir;
 import kong.task.Deadline;
 import kong.task.Event;
 import kong.task.Task;
-import kong.task.ToDo;
+import kong.task.Todo;
 
 class StorageTest {
     @TempDir
     Path temporaryDirectory;
 
     @Test
-    void loadTasks_missingFile_returnsEmptyList() throws IOException {
+    void loadTasksReturnsEmptyListForMissingFile() throws IOException {
         Storage storage = new Storage(temporaryDirectory.resolve("data/tasks.txt").toString());
 
         assertTrue(storage.loadTasks().isEmpty());
     }
 
     @Test
-    void saveTasks_newNestedFile_writesTasksThatCanBeLoadedAgain() throws IOException {
+    void saveTasksWritesTasksThatCanBeLoadedFromNewNestedFile() throws IOException {
         Path dataFile = temporaryDirectory.resolve("data/tasks.txt");
         Storage storage = new Storage(dataFile.toString());
         ArrayList<Task> tasks = new ArrayList<>();
-        tasks.add(new ToDo("read book", true));
+        tasks.add(new Todo("read book", true));
         tasks.add(new Deadline("return book", LocalDate.parse("2019-10-15")));
         tasks.add(new Event("conference", true, LocalDate.parse("2019-10-14"), LocalDate.parse("2019-10-16")));
 
@@ -49,7 +49,7 @@ class StorageTest {
     }
 
     @Test
-    void loadTasks_validAndMalformedLines_loadsOnlyValidTasks() throws IOException {
+    void loadTasksLoadsOnlyValidTasksFromValidAndMalformedLines() throws IOException {
         Path dataFile = temporaryDirectory.resolve("tasks.txt");
         Files.writeString(dataFile, String.join(System.lineSeparator(),
                 "T | 1 | read book",
@@ -62,7 +62,7 @@ class StorageTest {
         ArrayList<Task> loadedTasks = storage.loadTasks();
 
         assertEquals(2, loadedTasks.size());
-        assertInstanceOf(ToDo.class, loadedTasks.get(0));
+        assertInstanceOf(Todo.class, loadedTasks.get(0));
         assertInstanceOf(Event.class, loadedTasks.get(1));
     }
 }

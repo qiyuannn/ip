@@ -7,7 +7,7 @@ import java.time.LocalDate;
  */
 public class Task {
     private String description;
-    private boolean done = false;
+    private boolean isDone = false;
 
     /**
      * Creates an incomplete task.
@@ -22,20 +22,20 @@ public class Task {
      * Creates a task with an explicit completion status.
      *
      * @param desc task description
-     * @param done whether the task is complete
+     * @param isDone whether the task is complete
      */
-    public Task(String desc, boolean done) {
+    public Task(String desc, boolean isDone) {
         this.description = desc;
-        this.done = done;
+        this.isDone = isDone;
     }
 
     /** Marks this task as complete. */
     public void mark() {
-        this.done = true;
+        this.isDone = true;
     }
     /** Marks this task as incomplete. */
     public void unmark() {
-        this.done = false;
+        this.isDone = false;
     }
 
     /**
@@ -53,7 +53,7 @@ public class Task {
      * @return {@code "1"} when complete; otherwise {@code "0"}
      */
     protected String getDoneStatus() {
-        return this.done ? "1" : "0";
+        return this.isDone ? "1" : "0";
     }
 
     /**
@@ -83,7 +83,7 @@ public class Task {
     @Override
     public String toString() {
         String out = "";
-        if (this.done) {
+        if (this.isDone) {
             out += "[X]";
         } else {
             out += "[ ]";

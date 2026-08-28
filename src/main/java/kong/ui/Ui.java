@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 import kong.task.Task;
 import kong.task.TaskList;
-import kong.task.ToDo;
+import kong.task.Todo;
 
 /**
  * Handles interactions with the user through the console.
@@ -97,7 +97,7 @@ public class Ui {
      * @param task added task
      */
     public void showTaskAdded(Task task) {
-        if (task instanceof ToDo) {
+        if (task instanceof Todo) {
             System.out.println("Got it. I've added this task");
         } else {
             System.out.println("Got it. I've added this task.");

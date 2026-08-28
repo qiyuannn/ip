@@ -10,7 +10,7 @@ import kong.task.TaskList;
 import kong.ui.Ui;
 
 /**
- * Coordinates Kong's storage, task list, parser, commands, and console UI.
+ * Coordinates the task list, persistent storage, command parsing, and console UI.
  */
 public class Kong {
     private final Storage storage;
@@ -28,6 +28,7 @@ public class Kong {
         tasks = loadTasks();
     }
 
+    /** Runs the command loop until the user exits. */
     /**
      * Runs the command-reading loop until the user issues an exit command.
      */

@@ -3,13 +3,13 @@ package kong.task;
 /**
  * Represents a task without an associated date.
  */
-public class ToDo extends Task{
+public class Todo extends Task {
     /**
      * Creates an incomplete todo.
      *
      * @param desc task description
      */
-    public ToDo(String desc) {
+    public Todo(String desc) {
         super(desc);
     }
 
@@ -17,10 +17,10 @@ public class ToDo extends Task{
      * Creates a todo with an explicit completion status.
      *
      * @param desc task description
-     * @param done whether the todo is complete
+     * @param isDone whether the todo is complete
      */
-    public ToDo(String desc, boolean done) {
-        super(desc, done);
+    public Todo(String desc, boolean isDone) {
+        super(desc, isDone);
     }
 
     /** {@inheritDoc} */

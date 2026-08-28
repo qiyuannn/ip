@@ -11,7 +11,7 @@ import java.util.List;
 import kong.task.Deadline;
 import kong.task.Event;
 import kong.task.Task;
-import kong.task.ToDo;
+import kong.task.Todo;
 
 /**
  * Loads and saves tasks using Kong's pipe-delimited text format.
@@ -101,7 +101,7 @@ public class Storage {
                 if (parts.length != 3) {
                     return null;
                 }
-                return new ToDo(description, isDone);
+                return new Todo(description, isDone);
             case "D":
                 String by = getPart(parts, 3);
                 LocalDate byDate = parseDate(by);
