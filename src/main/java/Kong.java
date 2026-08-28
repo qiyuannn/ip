@@ -19,55 +19,10 @@ public class Kong {
         while (true) {
             ui.showLine();
             try {
-                Parser.ParsedCommand parsedCommand = Parser.parse(scanner.nextLine());
-                CommandType command = parsedCommand.getCommand();
-                String arg = parsedCommand.getArg();
-
-                switch (command) {
-                    case TODO: {
-                        executeCommand(createTodoCommand(arg));
-                        break;
-                    }
-                    case DEADLINE: {
-                        executeCommand(createDeadlineCommand(arg));
-                        break;
-                    }
-                    case EVENT: {
-                        executeCommand(createEventCommand(arg));
-                        break;
-                    }
-                    case LIST: {
-                        executeCommand(new ListCommand());
-                        break;
-                    }
-                    case ON: {
-                        executeCommand(createOnDateCommand(arg));
-                        break;
-                    }
-                    case MARK: {
-                        executeCommand(new MarkCommand(arg));
-                        break;
-                    }
-                    case UNMARK: {
-                        executeCommand(new UnmarkCommand(arg));
-                        break;
-                    }
-                    case DELETE: {
-                        executeCommand(new DeleteCommand(arg));
-                        break;
-                    }
-                    case BYE: {
-                        Command exitCommand = new ExitCommand();
-                        executeCommand(exitCommand);
-                        if (exitCommand.isExit()) {
-                            return;
-                        }
-                        break;
-                    }
-                    case UNKNOWN: {
-                        executeCommand(new UnknownCommand());
-                        break;
-                    }
+                Command command = Parser.parse(scanner.nextLine());
+                executeCommand(command);
+                if (command.isExit()) {
+                    return;
                 }
             } catch (KongException e) {
                 ui.showError(e.getMessage());
@@ -83,30 +38,6 @@ public class Kong {
         command.execute(tasks, ui, storage);
     }
 
-    private Command createTodoCommand(String description) throws KongException {
-        if (description.isEmpty()) {
-            throw new KongException("Invalid command. A todo command needs to be in the following format: todo <description>");
-        }
-        return new TodoCommand(description);
-    }
-
-    private Command createDeadlineCommand(String arg) throws KongException {
-        Parser.DeadlineDetails deadlineDetails = Parser.parseDeadline(arg);
-        return new DeadlineCommand(deadlineDetails.getDescription(), deadlineDetails.getBy());
-    }
-
-    private Command createEventCommand(String arg) throws KongException {
-        Parser.EventDetails eventDetails = Parser.parseEvent(arg);
-        return new EventCommand(eventDetails.getDescription(), eventDetails.getFrom(), eventDetails.getTo());
-    }
-
-    private Command createOnDateCommand(String arg) throws KongException {
-        if (arg.isEmpty()) {
-            throw new KongException("Invalid command. An on command needs to be in the following format: on <date>");
-        }
-        return new OnDateCommand(Parser.parseDate(arg));
-    }
-
     private TaskList loadTasks() {
         try {
             return new TaskList(storage.loadTasks());
@@ -116,11 +47,4 @@ public class Kong {
         }
     }
 
-    private void saveTasks() throws KongException {
-        try {
-            storage.saveTasks(tasks.asList());
-        } catch (IOException e) {
-            throw new KongException("Unable to save tasks to disk.");
-        }
-    }
 }
