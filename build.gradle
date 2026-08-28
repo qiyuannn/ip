@@ -1,0 +1,17 @@
+plugins {
+    id 'application'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+application {
+    mainClass = 'kong.Kong'
+}
+
+tasks.named('run') {
+    standardInput = System.in
+}
