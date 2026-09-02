@@ -16,6 +16,7 @@ public class Kong {
     private final Storage storage;
     private final TaskList tasks;
     private final Ui ui;
+    private boolean isExitRequested;
 
     /**
      * Creates a Kong application backed by the specified task data file.
@@ -51,6 +52,38 @@ public class Kong {
     }
 
     /**
+     * Executes one command and returns all user-facing output as one response.
+     * This method lets graphical interfaces reuse the same parser and commands as the console UI.
+     *
+     * @param input complete command entered by the user
+     * @return response produced while executing the command
+     */
+    public String getResponse(String input) {
+        StringBuilder response = new StringBuilder();
+        Ui responseUi = new Ui(message -> appendResponse(response, message));
+        isExitRequested = false;
+
+        try {
+            Command command = Parser.parse(input);
+            command.execute(tasks, responseUi, storage);
+            isExitRequested = command.isExit();
+        } catch (KongException e) {
+            responseUi.showError(e.getMessage());
+        }
+
+        return response.toString();
+    }
+
+    /**
+     * Indicates whether the most recent GUI command asked Kong to exit.
+     *
+     * @return {@code true} if the most recent command was {@code bye}
+     */
+    public boolean isExitRequested() {
+        return isExitRequested;
+    }
+
+    /**
      * Starts Kong using the default task data file.
      *
      * @param args command-line arguments, which are not used
@@ -71,6 +104,14 @@ public class Kong {
             ui.showLoadingError();
             return new TaskList();
         }
+    }
+
+    /** Adds one UI message to a multi-line GUI response. */
+    private static void appendResponse(StringBuilder response, String message) {
+        if (response.length() > 0) {
+            response.append(System.lineSeparator());
+        }
+        response.append(message);
     }
 
 }

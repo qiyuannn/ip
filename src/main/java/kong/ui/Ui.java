@@ -2,6 +2,7 @@ package kong.ui;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.function.Consumer;
 
 import kong.task.Task;
 import kong.task.TaskList;
@@ -19,20 +20,32 @@ public class Ui {
             + "|_|\\_\\___/|_| |_|\\__, |\n"
             + "                 |___/ \n";
     private final Scanner scanner;
+    private final Consumer<String> output;
 
     /** Creates a console UI that reads from standard input. */
     public Ui() {
         scanner = new Scanner(System.in);
+        output = System.out::println;
+    }
+
+    /**
+     * Creates a response UI that sends each displayed message to the supplied consumer.
+     *
+     * @param output destination for user-facing messages
+     */
+    public Ui(Consumer<String> output) {
+        scanner = null;
+        this.output = output;
     }
 
     /** Displays Kong's banner and greeting. */
     public void showWelcome() {
-        System.out.println(BANNER + LINE + "\n" + "Hello, I'm Kong.\nWhat can I do for you?");
+        output.accept(BANNER + LINE + "\n" + "Hello, I'm Kong.\nWhat can I do for you?");
     }
 
     /** Displays a divider between command interactions. */
     public void showLine() {
-        System.out.println(LINE);
+        output.accept(LINE);
     }
 
     /**
@@ -41,6 +54,7 @@ public class Ui {
      * @return entered command text
      */
     public String readCommand() {
+        assert scanner != null : "A response-only UI cannot read commands";
         return scanner.nextLine();
     }
 
@@ -50,12 +64,12 @@ public class Ui {
      * @param message error explanation
      */
     public void showError(String message) {
-        System.out.println(message);
+        output.accept(message);
     }
 
     /** Displays a warning when stored tasks cannot be loaded. */
     public void showLoadingError() {
-        System.out.println("Unable to load tasks from disk. Starting with an empty list.");
+        output.accept("Unable to load tasks from disk. Starting with an empty list.");
     }
 
     /**
@@ -65,12 +79,12 @@ public class Ui {
      */
     public void showTaskList(TaskList tasks) {
         if (!tasks.isEmpty()) {
-            System.out.println("Here are the tasks in your list.");
+            output.accept("Here are the tasks in your list.");
             for (int i = 0; i < tasks.size(); i++) {
-                System.out.println(String.format("%d. %s", i + 1, tasks.get(i).toString()));
+                output.accept(String.format("%d. %s", i + 1, tasks.get(i).toString()));
             }
         } else {
-            System.out.println("There are currently no tasks in your list.");
+            output.accept("There are currently no tasks in your list.");
         }
     }
 
@@ -81,13 +95,13 @@ public class Ui {
      */
     public void showTasksOnDate(ArrayList<Task> matchingTasks) {
         if (matchingTasks.isEmpty()) {
-            System.out.println("There are no deadlines or events on this date.");
+            output.accept("There are no deadlines or events on this date.");
             return;
         }
 
-        System.out.println("Here are the deadlines and events on this date.");
+        output.accept("Here are the deadlines and events on this date.");
         for (int i = 0; i < matchingTasks.size(); i++) {
-            System.out.println(String.format("%d. %s", i + 1, matchingTasks.get(i).toString()));
+            output.accept(String.format("%d. %s", i + 1, matchingTasks.get(i).toString()));
         }
     }
 
@@ -98,13 +112,13 @@ public class Ui {
      */
     public void showMatchingTasks(ArrayList<Task> matchingTasks) {
         if (matchingTasks.isEmpty()) {
-            System.out.println("There are no matching tasks in your list.");
+            output.accept("There are no matching tasks in your list.");
             return;
         }
 
-        System.out.println("Here are the matching tasks in your list:");
+        output.accept("Here are the matching tasks in your list:");
         for (int i = 0; i < matchingTasks.size(); i++) {
-            System.out.println(String.format("%d. %s", i + 1, matchingTasks.get(i).toString()));
+            output.accept(String.format("%d. %s", i + 1, matchingTasks.get(i).toString()));
         }
     }
 
@@ -115,11 +129,11 @@ public class Ui {
      */
     public void showTaskAdded(Task task) {
         if (task instanceof Todo) {
-            System.out.println("Got it. I've added this task");
+            output.accept("Got it. I've added this task");
         } else {
-            System.out.println("Got it. I've added this task.");
+            output.accept("Got it. I've added this task.");
         }
-        System.out.println(task.toString());
+        output.accept(task.toString());
     }
 
     /**
@@ -128,8 +142,8 @@ public class Ui {
      * @param task updated task
      */
     public void showTaskMarked(Task task) {
-        System.out.println("I've marked this task as done.");
-        System.out.println(task.toString());
+        output.accept("I've marked this task as done.");
+        output.accept(task.toString());
     }
 
     /**
@@ -138,8 +152,8 @@ public class Ui {
      * @param task updated task
      */
     public void showTaskUnmarked(Task task) {
-        System.out.println("I've marked this task as undone.");
-        System.out.println(task.toString());
+        output.accept("I've marked this task as undone.");
+        output.accept(task.toString());
     }
 
     /**
@@ -148,12 +162,12 @@ public class Ui {
      * @param task removed task
      */
     public void showTaskDeleted(Task task) {
-        System.out.println("The following task have been removed.");
-        System.out.println(task.toString());
+        output.accept("The following task have been removed.");
+        output.accept(task.toString());
     }
 
     /** Displays the exit message. */
     public void showGoodbye() {
-        System.out.println("BYEBYE!");
+        output.accept("BYEBYE!");
     }
 }
