@@ -7,8 +7,9 @@ import java.util.Locale;
 /**
  * Represents a task that occurs over an inclusive date range.
  */
-public class Event extends Task{
-    private static final DateTimeFormatter DISPLAY_DATE_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy", Locale.ENGLISH);
+public class Event extends Task {
+    private static final DateTimeFormatter DISPLAY_DATE_FORMAT =
+            DateTimeFormatter.ofPattern("MMM dd yyyy", Locale.ENGLISH);
 
     private LocalDate from;
     private LocalDate to;

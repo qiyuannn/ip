@@ -28,7 +28,6 @@ public class Kong {
         tasks = loadTasks();
     }
 
-    /** Runs the command loop until the user exits. */
     /**
      * Runs the command-reading loop until the user issues an exit command.
      */
