@@ -2,6 +2,7 @@ package kong.task;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
@@ -41,6 +42,13 @@ class TaskListTest {
         assertEquals(firstTask, tasks.remove(0));
         assertEquals(secondTask, tasks.get(0));
         assertFalse(tasks.isEmpty());
+    }
+
+    @Test
+    void addRejectsNullTask() {
+        TaskList tasks = new TaskList();
+
+        assertThrows(AssertionError.class, () -> tasks.add(null));
     }
 
     @Test
