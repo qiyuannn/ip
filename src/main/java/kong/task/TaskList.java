@@ -18,18 +18,21 @@ public class TaskList {
     /**
      * Creates a task list backed by the supplied collection.
      *
-     * @param tasks initial tasks
+     * @param tasks non-null initial task collection
      */
     public TaskList(ArrayList<Task> tasks) {
+        assert tasks != null : "A task list must be initialized with a collection";
+        assert !tasks.contains(null) : "A task list cannot be initialized with null tasks";
         this.tasks = tasks;
     }
 
     /**
      * Adds a task to the end of the list.
      *
-     * @param task task to add
+     * @param task non-null task to add
      */
     public void add(Task task) {
+        assert task != null : "A task list cannot contain null tasks";
         tasks.add(task);
     }
 

@@ -43,6 +43,7 @@ public class MainWindow extends AnchorPane {
      * @param kong application logic for processing commands
      */
     public void setKong(Kong kong) {
+        assert kong != null : "The main window requires an application instance";
         this.kong = kong;
         dialogContainer.getChildren().add(DialogBox.getKongDialog(WELCOME_MESSAGE, kongImage));
     }
@@ -50,6 +51,7 @@ public class MainWindow extends AnchorPane {
     /** Sends the current text to Kong and adds both sides of the exchange to the chat. */
     @FXML
     private void handleUserInput() {
+        assert kong != null : "The application must be injected before input is handled";
         String input = userInput.getText();
         String response = kong.getResponse(input);
         dialogContainer.getChildren().addAll(

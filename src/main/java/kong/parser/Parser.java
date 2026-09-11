@@ -83,6 +83,7 @@ public class Parser {
             case UNKNOWN:
                 return new UnknownCommand();
             default:
+                assert false : "Every command type must be handled by the parser";
                 return new UnknownCommand();
         }
     }

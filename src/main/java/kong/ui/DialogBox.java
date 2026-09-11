@@ -34,6 +34,8 @@ public class DialogBox extends HBox {
             throw new IllegalStateException("Unable to load a dialog box.", e);
         }
 
+        assert dialog != null : "DialogBox.fxml must inject the dialog label";
+        assert displayPicture != null : "DialogBox.fxml must inject the display picture";
         dialog.setText(text);
         displayPicture.setImage(image);
     }
