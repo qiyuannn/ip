@@ -24,6 +24,7 @@ class TaskListTest {
         assertEquals(2, tasks.getTasksOnDate(LocalDate.parse("2019-10-15")).size());
         assertEquals(deadline, tasks.getTasksOnDate(LocalDate.parse("2019-10-15")).get(0));
         assertEquals(matchingEvent, tasks.getTasksOnDate(LocalDate.parse("2019-10-15")).get(1));
+        assertTrue(tasks.getTasksOnDate(LocalDate.parse("2019-10-30")).isEmpty());
     }
 
     @Test
