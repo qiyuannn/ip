@@ -7,6 +7,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import kong.task.Deadline;
 import kong.task.Event;
@@ -43,14 +45,10 @@ public class Storage {
             throw new IOException("The data path is not a regular file.");
         }
 
-        List<String> lines = Files.readAllLines(filePath);
-        for (String line : lines) {
-            Task task = parseTask(line);
-            if (task != null) {
-                tasks.add(task);
-            }
-        }
-        return tasks;
+        return Files.readAllLines(filePath).stream()
+                .map(Storage::parseTask)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
@@ -65,10 +63,9 @@ public class Storage {
             Files.createDirectories(folderPath);
         }
 
-        ArrayList<String> lines = new ArrayList<>();
-        for (Task task : tasks) {
-            lines.add(task.toFileString());
-        }
+        List<String> lines = tasks.stream()
+                .map(Task::toFileString)
+                .toList();
         Files.write(filePath, lines);
     }
 
