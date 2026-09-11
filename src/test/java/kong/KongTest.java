@@ -35,6 +35,15 @@ class KongTest {
     }
 
     @Test
+    void getResponseReportsDeleteCommandForInvalidDeleteNumber() {
+        Kong kong = new Kong(temporaryDirectory.resolve("data/tasks.txt").toString());
+
+        String response = kong.getResponse("delete abc");
+
+        assertTrue(response.contains("A delete command needs to be followed by a number."));
+    }
+
+    @Test
     void getResponseRecordsExitRequest() {
         Kong kong = new Kong(temporaryDirectory.resolve("data/tasks.txt").toString());
 

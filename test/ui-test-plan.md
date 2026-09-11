@@ -400,3 +400,19 @@ D | 0 | return book | 2019-10-14
 D | 0 | submit report | 2019-10-20
 T | 0 | read book
 ```
+
+## TC21 Invalid delete number
+
+**Aim:** Check that `delete` with a non-numeric task number identifies the correct command in its error message.
+
+### Input
+```text
+delete abc
+bye
+```
+
+### Expected Output
+```text
+Invalid command. A delete command needs to be followed by a number.
+BYEBYE!
+```
