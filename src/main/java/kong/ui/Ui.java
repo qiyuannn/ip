@@ -78,14 +78,13 @@ public class Ui {
      * @param tasks task list to display
      */
     public void showTaskList(TaskList tasks) {
-        if (!tasks.isEmpty()) {
-            output.accept("Here are the tasks in your list.");
-            for (int i = 0; i < tasks.size(); i++) {
-                output.accept(String.format("%d. %s", i + 1, tasks.get(i).toString()));
-            }
-        } else {
+        if (tasks.isEmpty()) {
             output.accept("There are currently no tasks in your list.");
+            return;
         }
+
+        output.accept("Here are the tasks in your list.");
+        showNumberedTasks(tasks.asList());
     }
 
     /**
@@ -100,9 +99,7 @@ public class Ui {
         }
 
         output.accept("Here are the deadlines and events on this date.");
-        for (int i = 0; i < matchingTasks.size(); i++) {
-            output.accept(String.format("%d. %s", i + 1, matchingTasks.get(i).toString()));
-        }
+        showNumberedTasks(matchingTasks);
     }
 
     /**
@@ -117,8 +114,15 @@ public class Ui {
         }
 
         output.accept("Here are the matching tasks in your list:");
-        for (int i = 0; i < matchingTasks.size(); i++) {
-            output.accept(String.format("%d. %s", i + 1, matchingTasks.get(i).toString()));
+        showNumberedTasks(matchingTasks);
+    }
+
+    /** Displays tasks in encounter order using one-based numbering. */
+    private void showNumberedTasks(Iterable<Task> tasks) {
+        int taskNumber = 1;
+        for (Task task : tasks) {
+            output.accept(String.format("%d. %s", taskNumber, task));
+            taskNumber++;
         }
     }
 

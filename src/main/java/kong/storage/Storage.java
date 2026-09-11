@@ -98,29 +98,49 @@ public class Storage {
 
         switch (taskType) {
             case "T":
-                if (parts.length != 3) {
-                    return null;
-                }
-                return new Todo(description, isDone);
+                return parseTodo(parts, description, isDone);
             case "D":
-                String by = getPart(parts, 3);
-                LocalDate byDate = parseDate(by);
-                if (parts.length != 4 || byDate == null) {
-                    return null;
-                }
-                return new Deadline(description, isDone, byDate);
+                return parseDeadline(parts, description, isDone);
             case "E":
-                String from = getPart(parts, 3);
-                String to = getPart(parts, 4);
-                LocalDate fromDate = parseDate(from);
-                LocalDate toDate = parseDate(to);
-                if (parts.length != 5 || fromDate == null || toDate == null) {
-                    return null;
-                }
-                return new Event(description, isDone, fromDate, toDate);
+                return parseEvent(parts, description, isDone);
             default:
                 return null;
         }
+    }
+
+    /** Parses a todo record after its common fields have been validated. */
+    private static Task parseTodo(String[] parts, String description, boolean isDone) {
+        if (parts.length != 3) {
+            return null;
+        }
+        return new Todo(description, isDone);
+    }
+
+    /** Parses a deadline record after its common fields have been validated. */
+    private static Task parseDeadline(String[] parts, String description, boolean isDone) {
+        if (parts.length != 4) {
+            return null;
+        }
+
+        LocalDate dueDate = parseDate(getPart(parts, 3));
+        if (dueDate == null) {
+            return null;
+        }
+        return new Deadline(description, isDone, dueDate);
+    }
+
+    /** Parses an event record after its common fields have been validated. */
+    private static Task parseEvent(String[] parts, String description, boolean isDone) {
+        if (parts.length != 5) {
+            return null;
+        }
+
+        LocalDate startDate = parseDate(getPart(parts, 3));
+        LocalDate endDate = parseDate(getPart(parts, 4));
+        if (startDate == null || endDate == null) {
+            return null;
+        }
+        return new Event(description, isDone, startDate, endDate);
     }
 
     /**
