@@ -40,11 +40,7 @@ public class Kong {
             try {
                 String fullCommand = ui.readCommand();
                 ui.showLine();
-                Command command = Parser.parse(fullCommand);
-                command.execute(tasks, ui, storage);
-                isExit = command.isExit();
-            } catch (KongException e) {
-                ui.showError(e.getMessage());
+                isExit = executeCommand(fullCommand, ui);
             } finally {
                 ui.showLine();
             }
@@ -61,15 +57,7 @@ public class Kong {
     public String getResponse(String input) {
         StringBuilder response = new StringBuilder();
         Ui responseUi = new Ui(message -> appendResponse(response, message));
-        isExitRequested = false;
-
-        try {
-            Command command = Parser.parse(input);
-            command.execute(tasks, responseUi, storage);
-            isExitRequested = command.isExit();
-        } catch (KongException e) {
-            responseUi.showError(e.getMessage());
-        }
+        isExitRequested = executeCommand(input, responseUi);
 
         return response.toString();
     }
@@ -103,6 +91,24 @@ public class Kong {
         } catch (IOException e) {
             ui.showLoadingError();
             return new TaskList();
+        }
+    }
+
+    /**
+     * Parses and executes one command, displaying recognized command errors through the supplied UI.
+     *
+     * @param input complete command entered by the user
+     * @param commandUi UI that receives output from this command
+     * @return {@code true} if the command requests application exit
+     */
+    private boolean executeCommand(String input, Ui commandUi) {
+        try {
+            Command command = Parser.parse(input);
+            command.execute(tasks, commandUi, storage);
+            return command.isExit();
+        } catch (KongException e) {
+            commandUi.showError(e.getMessage());
+            return false;
         }
     }
 
