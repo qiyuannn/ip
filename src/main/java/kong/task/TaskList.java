@@ -2,6 +2,7 @@ package kong.task;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
@@ -9,6 +10,11 @@ import java.util.stream.Collectors;
  * Holds the user's tasks and provides operations on the task collection.
  */
 public class TaskList {
+    /** Orders dated tasks by date before undated tasks, while treating equal dates as equal. */
+    private static final Comparator<Task> CHRONOLOGICAL_COMPARATOR =
+            Comparator.comparing((Task task) -> task.getSortDate().isEmpty())
+                    .thenComparing(task -> task.getSortDate().orElse(LocalDate.MIN));
+
     private final ArrayList<Task> tasks;
 
     /** Creates an empty task list. */
@@ -25,16 +31,23 @@ public class TaskList {
         assert tasks != null : "A task list must be initialized with a collection";
         assert !tasks.contains(null) : "A task list cannot be initialized with null tasks";
         this.tasks = tasks;
+        this.tasks.sort(CHRONOLOGICAL_COMPARATOR);
     }
 
     /**
-     * Adds a task to the end of the list.
+     * Adds a task in chronological order, with undated tasks placed last.
+     * Tasks with the same date retain their insertion order.
      *
      * @param task non-null task to add
      */
     public void add(Task task) {
         assert task != null : "A task list cannot contain null tasks";
-        tasks.add(task);
+        int insertionIndex = 0;
+        while (insertionIndex < tasks.size()
+                && CHRONOLOGICAL_COMPARATOR.compare(tasks.get(insertionIndex), task) <= 0) {
+            insertionIndex++;
+        }
+        tasks.add(insertionIndex, task);
     }
 
     /**

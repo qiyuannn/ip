@@ -94,8 +94,8 @@ BYEBYE!
 todo read book
 deadline return book /by 2019-10-15
 event project meeting /from 2019-10-15 /to 2019-10-16
-mark 1
-delete 2
+mark 3
+delete 1
 bye
 ```
 
@@ -116,8 +116,8 @@ BYEBYE!
 
 ### Expected Saved File
 ```text
-T | 1 | read book
 E | 0 | project meeting | 2019-10-15 | 2019-10-16
+T | 1 | read book
 ```
 
 
@@ -141,9 +141,9 @@ bye
 ### Expected Output
 ```text
 Here are the tasks in your list.
-1. [T][X] read book
-2. [D][ ] return book (by: Oct 15 2019)
-3. [E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)
+1. [D][ ] return book (by: Oct 15 2019)
+2. [E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)
+3. [T][X] read book
 BYEBYE!
 ```
 
@@ -190,8 +190,8 @@ bye
 ### Expected Output
 ```text
 Here are the tasks in your list.
-1. [T][X] read book
-2. [E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)
+1. [E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)
+2. [T][X] read book
 BYEBYE!
 ```
 
@@ -246,8 +246,8 @@ bye
 ### Expected Output
 ```text
 Here are the deadlines and events on this date.
-1. [D][ ] return book (by: Oct 15 2019)
-2. [E][ ] conference (from: Oct 14 2019 to: Oct 16 2019)
+1. [E][ ] conference (from: Oct 14 2019 to: Oct 16 2019)
+2. [D][ ] return book (by: Oct 15 2019)
 BYEBYE!
 ```
 
@@ -331,8 +331,8 @@ bye
 ### Expected Output
 ```text
 Here are the matching tasks in your list:
-1. [T][ ] read book
-2. [D][ ] return book (by: Oct 15 2019)
+1. [D][ ] return book (by: Oct 15 2019)
+2. [T][ ] read book
 BYEBYE!
 ```
 
@@ -367,4 +367,36 @@ bye
 ```text
 Invalid command. A find command needs to be in the following format: find <keyword>
 BYEBYE!
+```
+
+## TC20 Insert tasks chronologically
+
+**Aim:** Check that tasks are automatically inserted by date, with todos last, and saved in their displayed order.
+
+### Input
+```text
+todo read book
+deadline submit report /by 2019-10-20
+event conference /from 2019-10-14 /to 2019-10-16
+deadline return book /by 2019-10-14
+list
+bye
+```
+
+### Expected Output
+```text
+Here are the tasks in your list.
+1. [E][ ] conference (from: Oct 14 2019 to: Oct 16 2019)
+2. [D][ ] return book (by: Oct 14 2019)
+3. [D][ ] submit report (by: Oct 20 2019)
+4. [T][ ] read book
+BYEBYE!
+```
+
+### Expected Saved File
+```text
+E | 0 | conference | 2019-10-14 | 2019-10-16
+D | 0 | return book | 2019-10-14
+D | 0 | submit report | 2019-10-20
+T | 0 | read book
 ```

@@ -3,6 +3,7 @@ package kong.task;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.Optional;
 
 /**
  * Represents a task that is due on a specific date.
@@ -40,6 +41,12 @@ public class Deadline extends Task {
     @Override
     public boolean occursOn(LocalDate date) {
         return this.by.equals(date);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Optional<LocalDate> getSortDate() {
+        return Optional.of(this.by);
     }
 
     /** {@inheritDoc} */

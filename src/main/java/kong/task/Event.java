@@ -3,6 +3,7 @@ package kong.task;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.Optional;
 
 /**
  * Represents a task that occurs over an inclusive date range.
@@ -45,6 +46,12 @@ public class Event extends Task {
     @Override
     public boolean occursOn(LocalDate date) {
         return !date.isBefore(this.from) && !date.isAfter(this.to);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Optional<LocalDate> getSortDate() {
+        return Optional.of(this.from);
     }
 
     /** {@inheritDoc} */

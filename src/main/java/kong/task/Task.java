@@ -1,6 +1,7 @@
 package kong.task;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 /**
  * Represents a task with a description and completion status.
@@ -74,6 +75,15 @@ public class Task {
      */
     public boolean occursOn(LocalDate date) {
         return false;
+    }
+
+    /**
+     * Returns the date used when sorting tasks chronologically.
+     *
+     * @return an empty value because a basic task has no date
+     */
+    public Optional<LocalDate> getSortDate() {
+        return Optional.empty();
     }
 
     /**

@@ -23,8 +23,8 @@ class TaskListTest {
         tasks.add(nonMatchingEvent);
 
         assertEquals(2, tasks.getTasksOnDate(LocalDate.parse("2019-10-15")).size());
-        assertEquals(deadline, tasks.getTasksOnDate(LocalDate.parse("2019-10-15")).get(0));
-        assertEquals(matchingEvent, tasks.getTasksOnDate(LocalDate.parse("2019-10-15")).get(1));
+        assertEquals(matchingEvent, tasks.getTasksOnDate(LocalDate.parse("2019-10-15")).get(0));
+        assertEquals(deadline, tasks.getTasksOnDate(LocalDate.parse("2019-10-15")).get(1));
         assertTrue(tasks.getTasksOnDate(LocalDate.parse("2019-10-30")).isEmpty());
     }
 
@@ -64,8 +64,26 @@ class TaskListTest {
         tasks.add(secondMatch);
 
         assertEquals(2, tasks.findTasks("BOOK").size());
-        assertEquals(firstMatch, tasks.findTasks("BOOK").get(0));
-        assertEquals(secondMatch, tasks.findTasks("BOOK").get(1));
+        assertEquals(secondMatch, tasks.findTasks("BOOK").get(0));
+        assertEquals(firstMatch, tasks.findTasks("BOOK").get(1));
         assertTrue(tasks.findTasks("movie").isEmpty());
+    }
+
+    @Test
+    void add_mixedTasks_insertsDatedTasksChronologicallyBeforeTodosAndPreservesTies() {
+        TaskList tasks = new TaskList();
+        Task todo = new Todo("read book");
+        Task laterDeadline = new Deadline("submit report", LocalDate.parse("2019-10-20"));
+        Task event = new Event("conference", LocalDate.parse("2019-10-14"), LocalDate.parse("2019-10-16"));
+        Task earlierDeadline = new Deadline("return book", LocalDate.parse("2019-10-14"));
+        tasks.add(todo);
+        tasks.add(laterDeadline);
+        tasks.add(event);
+        tasks.add(earlierDeadline);
+
+        assertEquals(event, tasks.get(0));
+        assertEquals(earlierDeadline, tasks.get(1));
+        assertEquals(laterDeadline, tasks.get(2));
+        assertEquals(todo, tasks.get(3));
     }
 }

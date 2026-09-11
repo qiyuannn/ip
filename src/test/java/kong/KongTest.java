@@ -43,4 +43,15 @@ class KongTest {
         assertTrue(response.contains("BYEBYE!"));
         assertTrue(kong.isExitRequested());
     }
+
+    @Test
+    void getResponseListsTasksInChronologicalInsertionOrder() {
+        Kong kong = new Kong(temporaryDirectory.resolve("data/tasks.txt").toString());
+        kong.getResponse("deadline later /by 2019-10-20");
+        kong.getResponse("deadline earlier /by 2019-10-10");
+
+        String response = kong.getResponse("list");
+
+        assertTrue(response.indexOf("earlier") < response.indexOf("later"));
+    }
 }
