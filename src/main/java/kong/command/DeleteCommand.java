@@ -25,7 +25,9 @@ public class DeleteCommand extends Command {
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws KongException {
         try {
+            int previousTaskCount = tasks.size();
             Task task = tasks.remove(parseTaskIndex(taskNumber, "unmark"));
+            assert tasks.size() == previousTaskCount - 1 : "Deleting a task must reduce the task count by one";
             ui.showTaskDeleted(task);
             saveTasks(tasks, storage);
         } catch (IndexOutOfBoundsException e) {

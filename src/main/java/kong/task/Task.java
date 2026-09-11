@@ -12,19 +12,20 @@ public class Task {
     /**
      * Creates an incomplete task.
      *
-     * @param desc task description
+     * @param desc non-blank task description validated by the caller
      */
     public Task(String desc) {
-        this.description = desc;
+        this(desc, false);
     }
 
     /**
      * Creates a task with an explicit completion status.
      *
-     * @param desc task description
+     * @param desc non-blank task description validated by the caller
      * @param isDone whether the task is complete
      */
     public Task(String desc, boolean isDone) {
+        assert desc != null && !desc.isBlank() : "A task description must be validated before task creation";
         this.description = desc;
         this.isDone = isDone;
     }

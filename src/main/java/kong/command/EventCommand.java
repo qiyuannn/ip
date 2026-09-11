@@ -33,8 +33,10 @@ public class EventCommand extends Command {
     /** {@inheritDoc} */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws KongException {
+        int previousTaskCount = tasks.size();
         Task task = new Event(description, from, to);
         tasks.add(task);
+        assert tasks.size() == previousTaskCount + 1 : "Adding a task must increase the task count by one";
         ui.showTaskAdded(task);
         saveTasks(tasks, storage);
     }

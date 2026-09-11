@@ -16,23 +16,23 @@ public class Deadline extends Task {
     /**
      * Creates an incomplete deadline.
      *
-     * @param desc task description
-     * @param by due date
+     * @param desc non-blank task description validated by the caller
+     * @param by non-null due date validated by the caller
      */
     public Deadline(String desc, LocalDate by) {
-        super(desc);
-        this.by = by;
+        this(desc, false, by);
     }
 
     /**
      * Creates a deadline with an explicit completion status.
      *
-     * @param desc task description
+     * @param desc non-blank task description validated by the caller
      * @param done whether the deadline is complete
-     * @param by due date
+     * @param by non-null due date validated by the caller
      */
     public Deadline(String desc, boolean done, LocalDate by) {
         super(desc, done);
+        assert by != null : "A deadline date must be validated before task creation";
         this.by = by;
     }
 
