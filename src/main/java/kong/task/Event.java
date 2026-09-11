@@ -17,26 +17,26 @@ public class Event extends Task {
     /**
      * Creates an incomplete event.
      *
-     * @param desc task description
-     * @param from first date of the event
-     * @param to last date of the event
+     * @param desc non-blank task description validated by the caller
+     * @param from non-null first date validated by the caller
+     * @param to non-null last date validated by the caller
      */
     public Event(String desc, LocalDate from, LocalDate to) {
-        super(desc);
-        this.from = from;
-        this.to = to;
+        this(desc, false, from, to);
     }
 
     /**
      * Creates an event with an explicit completion status.
      *
-     * @param desc task description
+     * @param desc non-blank task description validated by the caller
      * @param done whether the event is complete
-     * @param from first date of the event
-     * @param to last date of the event
+     * @param from non-null first date validated by the caller
+     * @param to non-null last date validated by the caller
      */
     public Event(String desc, boolean done, LocalDate from, LocalDate to) {
         super(desc, done);
+        assert from != null : "An event start date must be validated before task creation";
+        assert to != null : "An event end date must be validated before task creation";
         this.from = from;
         this.to = to;
     }
