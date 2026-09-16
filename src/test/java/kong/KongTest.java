@@ -22,6 +22,7 @@ class KongTest {
         assertTrue(addResponse.contains("Got it. I've added this task"));
         assertTrue(addResponse.contains("[T][ ] read book"));
         assertTrue(listResponse.contains("1. [T][ ] read book"));
+        assertFalse(kong.isLastError());
     }
 
     @Test
@@ -32,6 +33,7 @@ class KongTest {
 
         assertTrue(response.contains("todo <description>"));
         assertFalse(kong.isExitRequested());
+        assertTrue(kong.isLastError());
     }
 
     @Test
@@ -41,6 +43,7 @@ class KongTest {
         String response = kong.getResponse("delete abc");
 
         assertTrue(response.contains("A delete command needs to be followed by a number."));
+        assertTrue(kong.isLastError());
     }
 
     @Test

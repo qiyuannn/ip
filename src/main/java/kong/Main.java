@@ -24,8 +24,9 @@ public class Main extends Application {
             loader.<MainWindow>getController().setKong(kong);
 
             stage.setTitle("Kong");
-            stage.setMinHeight(420);
-            stage.setMinWidth(440);
+            stage.setMinHeight(450);
+            stage.setMinWidth(400);
+            stage.setResizable(true);
             stage.setScene(new Scene(mainWindow));
             stage.show();
         } catch (IOException e) {

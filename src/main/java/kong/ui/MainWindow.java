@@ -31,10 +31,12 @@ public class MainWindow extends AnchorPane {
     private final Image kongImage = loadImage("/images/DaKong.png");
     private Kong kong;
 
-    /** Keeps the latest dialog visible whenever the conversation grows. */
+    /** Configures auto-scrolling to show the latest dialog whenever the conversation grows. */
     @FXML
     public void initialize() {
-        scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
+        dialogContainer.heightProperty().addListener((observable, oldValue, newValue) -> {
+            scrollPane.setVvalue(1.0);
+        });
     }
 
     /**
@@ -52,11 +54,16 @@ public class MainWindow extends AnchorPane {
     @FXML
     private void handleUserInput() {
         assert kong != null : "The application must be injected before input is handled";
-        String input = userInput.getText();
+        String input = userInput.getText().trim();
+        if (input.isEmpty()) {
+            return;
+        }
+
         String response = kong.getResponse(input);
+        boolean isError = kong.isLastError();
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getKongDialog(response, kongImage));
+                DialogBox.getKongDialog(response, kongImage, isError));
         userInput.clear();
 
         if (kong.isExitRequested()) {

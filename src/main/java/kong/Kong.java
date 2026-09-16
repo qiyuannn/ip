@@ -17,6 +17,7 @@ public class Kong {
     private final TaskList tasks;
     private final Ui ui;
     private boolean isExitRequested;
+    private boolean isLastError;
 
     /**
      * Creates a Kong application backed by the specified task data file.
@@ -72,6 +73,15 @@ public class Kong {
     }
 
     /**
+     * Indicates whether the most recent GUI command execution resulted in an error.
+     *
+     * @return {@code true} if the most recent command execution failed
+     */
+    public boolean isLastError() {
+        return isLastError;
+    }
+
+    /**
      * Starts Kong using the default task data file.
      *
      * @param args command-line arguments, which are not used
@@ -102,11 +112,13 @@ public class Kong {
      * @return {@code true} if the command requests application exit
      */
     private boolean executeCommand(String input, Ui commandUi) {
+        isLastError = false;
         try {
             Command command = Parser.parse(input);
             command.execute(tasks, commandUi, storage);
             return command.isExit();
         } catch (KongException e) {
+            isLastError = true;
             commandUi.showError(e.getMessage());
             return false;
         }
