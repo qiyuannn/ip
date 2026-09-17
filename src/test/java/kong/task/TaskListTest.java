@@ -122,4 +122,37 @@ class TaskListTest {
 
         assertEquals(2, tasks.size());
     }
+
+    @Test
+    void constructor_nullCollectionOrNullElements_throwsAssertionError() {
+        assertThrows(AssertionError.class, () -> new TaskList(null));
+
+        java.util.ArrayList<Task> listWithNull = new java.util.ArrayList<>();
+        listWithNull.add(null);
+        assertThrows(AssertionError.class, () -> new TaskList(listWithNull));
+    }
+
+    @Test
+    void hasDuplicate_nullTask_throwsAssertionError() {
+        TaskList tasks = new TaskList();
+
+        assertThrows(AssertionError.class, () -> tasks.hasDuplicate(null));
+    }
+
+    @Test
+    void remove_outOfBoundsIndex_throwsIndexOutOfBoundsException() {
+        TaskList tasks = new TaskList();
+
+        assertThrows(IndexOutOfBoundsException.class, () -> tasks.remove(0));
+    }
+
+    @Test
+    void asList_returnsUnderlyingCollection() {
+        TaskList tasks = new TaskList();
+        Task todo = new Todo("read book");
+        tasks.add(todo);
+
+        assertEquals(1, tasks.asList().size());
+        assertEquals(todo, tasks.asList().get(0));
+    }
 }

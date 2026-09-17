@@ -103,4 +103,24 @@ class StorageTest {
 
         assertThrows(IOException.class, () -> storage.saveTasks(new ArrayList<>()));
     }
+
+    @Test
+    void loadTasks_skipsMalformedDoneStatusAndFieldCounts() throws IOException {
+        Path dataFile = temporaryDirectory.resolve("malformed.txt");
+        Files.writeString(dataFile, String.join(System.lineSeparator(),
+                " ",
+                "T | 2 | invalid done status",
+                "T | 0 | read book | extra field",
+                "D | 0 | deadline | 2019-10-15 | extra",
+                "E | 0 | event | 2019-10-15 | 2019-10-16 | extra",
+                " | 0 | missing type",
+                "T | 0 | ",
+                "T | 1 | valid todo"));
+        Storage storage = new Storage(dataFile.toString());
+
+        ArrayList<Task> loadedTasks = storage.loadTasks();
+
+        assertEquals(1, loadedTasks.size());
+        assertEquals("[T][X] valid todo", loadedTasks.get(0).toString());
+    }
 }

@@ -87,4 +87,42 @@ class KongTest {
         assertTrue(response.contains("The list command does not take any arguments."));
         assertTrue(kong.isLastError());
     }
+
+    @Test
+    void loadTasks_storageIoException_fallsBackToEmptyList() {
+        Kong kong = new Kong(temporaryDirectory.toString());
+
+        String response = kong.getResponse("list");
+
+        assertTrue(response.contains("There are currently no tasks in your list."));
+    }
+
+    @Test
+    void getResponse_executesMarkUnmarkFindAndOnDateCommands() {
+        Kong kong = new Kong(temporaryDirectory.resolve("data/tasks.txt").toString());
+        kong.getResponse("todo read book");
+        kong.getResponse("deadline return book /by 2019-10-15");
+
+        String markResponse = kong.getResponse("mark 1");
+        assertTrue(markResponse.contains("I've marked this task as done."));
+
+        String unmarkResponse = kong.getResponse("unmark 1");
+        assertTrue(unmarkResponse.contains("I've marked this task as undone."));
+
+        String findResponse = kong.getResponse("find book");
+        assertTrue(findResponse.contains("Here are the matching tasks in your list:"));
+
+        String onDateResponse = kong.getResponse("on 2019-10-15");
+        assertTrue(onDateResponse.contains("Here are the deadlines and events on this date."));
+    }
+
+    @Test
+    void getResponse_unknownCommand_reportsErrorAndSetsLastError() {
+        Kong kong = new Kong(temporaryDirectory.resolve("data/tasks.txt").toString());
+
+        String response = kong.getResponse("foobar");
+
+        assertTrue(response.contains("Sorry we do not recognise that command yet."));
+        assertTrue(kong.isLastError());
+    }
 }

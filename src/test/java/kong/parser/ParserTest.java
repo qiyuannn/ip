@@ -117,6 +117,32 @@ class ParserTest {
         assertInstanceOf(EventCommand.class, Parser.parse("event party /to 2019-10-16 /from 2019-10-15"));
     }
 
+    @Test
+    void parseRejectsCarriageReturnInDescription() {
+        assertParseError("todo read\rbook", "Task description cannot contain newline characters.");
+    }
+
+    @Test
+    void parseHandlesExcessWhitespace() throws KongException {
+        assertInstanceOf(TodoCommand.class, Parser.parse("   todo    read   book   "));
+    }
+
+    @Test
+    void parseRejectsEmptyFlagValues() {
+        assertParseError("deadline return book /by   ",
+                "Invalid command. A deadline command needs to be in the following format: "
+                        + "deadline <description> /by <date>");
+        assertParseError("event party /from   /to 2019-10-16",
+                "Invalid command. An event command needs to be in the following format: "
+                        + "event <description> /from <date> /to <date>");
+    }
+
+    @Test
+    void constructorInstantiatesParser() {
+        Parser parser = new Parser();
+        assertEquals(Parser.class, parser.getClass());
+    }
+
     private static void assertParseError(String input, String expectedMessage) {
         KongException exception = assertThrows(KongException.class, () -> Parser.parse(input));
 
