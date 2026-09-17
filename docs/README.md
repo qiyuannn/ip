@@ -1,20 +1,20 @@
-# Kong User Guide
+# Professor Kong User Guide
 
-Kong is a desktop task-tracking chatbot designed to help you organize your daily tasks, deadlines, and events. Featuring an interactive chat interface optimized for fast command-line typing, Kong keeps your schedule neatly ordered and automatically saved.
+Professor Kong is a distinguished desktop task-tracking chatbot designed to help you organize your daily tasks, deadlines, and scholarly endeavors. Featuring an erudite Victorian gentleman's personality with an interactive chat interface optimized for fast command-line typing, Professor Kong keeps your schedule neatly ordered and automatically preserved in your archives.
 
-![Kong UI](Ui.png)
+![Professor Kong UI](Ui.png)
 
 ----------------------------------------------------------------------------------------------------
 
 ## Quick Start
 
 1. Ensure that **Java 25** is installed on your computer.
-2. Launch Kong. The chat window will open and display Kong's greeting.
+2. Launch Professor Kong. The chat window will open and display Professor Kong's scholarly greeting.
 3. Type a command in the input box at the bottom and press **Enter** (or click **Send**) to execute it.
 4. Try out some simple commands:
    * `todo read book` : Adds a new to-do task.
    * `deadline return book /by 2026-10-15` : Adds a deadline due on 15 Oct 2026.
-   * `list` : Lists all tasks currently in your list.
+   * `list` : Lists all tasks currently in your archives.
    * `bye` : Exits the application.
 5. Refer to the [Features](#features) section below for detailed instructions on each command.
 
@@ -41,7 +41,7 @@ Adds a general task without any date or time constraints.
 
 **Expected Outcome:**
 ```text
-Got it. I've added this task
+Splendid addition! I have inscribed this task into your archives:
 [T][ ] read book
 ```
 
@@ -57,7 +57,7 @@ Adds a task that must be completed by a specific date.
 
 **Expected Outcome:**
 ```text
-Got it. I've added this task.
+Splendid addition! I have inscribed this task into your archives:
 [D][ ] return book (by: Oct 15 2026)
 ```
 
@@ -75,7 +75,7 @@ Adds a task that spans a date range from a start date to an end date.
 
 **Expected Outcome:**
 ```text
-Got it. I've added this task.
+Splendid addition! I have inscribed this task into your archives:
 [E][ ] project meeting (from: Oct 15 2026 to: Oct 16 2026)
 ```
 
@@ -89,13 +89,13 @@ Displays all current tasks in the list, ordered chronologically with their index
 
 **Expected Outcome:**
 ```text
-Here are the tasks in your list.
+Here are the tasks currently recorded in your archives:
 1. [E][ ] project meeting (from: Oct 15 2026 to: Oct 16 2026)
 2. [D][ ] return book (by: Oct 15 2026)
 3. [T][ ] read book
 ```
 
-*(If the task list is empty, Kong displays: `There are currently no tasks in your list.`)*
+*(If the task list is empty, Professor Kong displays: `Your archive is pristine. There are currently no tasks in your list.`)*
 
 ---
 
@@ -109,7 +109,7 @@ Marks the specified task as completed.
 
 **Expected Outcome:**
 ```text
-I've marked this task as done.
+Capital progress! I have marked this task as completed:
 [D][X] return book (by: Oct 15 2026)
 ```
 
@@ -124,7 +124,7 @@ Marks a completed task back to incomplete.
 
 **Expected Outcome:**
 ```text
-I've marked this task as undone.
+Back to the drawing board! I have restored this task to pending status:
 [D][ ] return book (by: Oct 15 2026)
 ```
 
@@ -139,12 +139,12 @@ Searches for tasks whose descriptions contain the given keyword. The search is c
 
 **Expected Outcome:**
 ```text
-Here are the matching tasks in your list:
+Eureka! Here are the matching tasks found in your archives:
 1. [D][ ] return book (by: Oct 15 2026)
 2. [T][ ] read book
 ```
 
-*(If no tasks match, Kong displays: `There are no matching tasks in your list.`)*
+*(If no tasks match, Professor Kong displays: `Search complete. There are no matching tasks in your list.`)*
 
 ---
 
@@ -158,12 +158,12 @@ Lists all deadlines due on the given date and events occurring across that date.
 
 **Expected Outcome:**
 ```text
-Here are the deadlines and events on this date.
+Consulting the ledger. Here are the deadlines and events on this date:
 1. [E][ ] project meeting (from: Oct 15 2026 to: Oct 16 2026)
 2. [D][ ] return book (by: Oct 15 2026)
 ```
 
-*(If there are no matching tasks on that date, Kong displays: `There are no deadlines or events on this date.`)*
+*(If there are no matching tasks on that date, Professor Kong displays: `The ledger is clear. There are no deadlines or events on this date.`)*
 
 ---
 
@@ -176,7 +176,7 @@ Permanently removes a task from the list at the specified index.
 
 **Expected Outcome:**
 ```text
-The following task have been removed.
+Expunged from the archives! The following task has been removed:
 [E][ ] project meeting (from: Oct 15 2026 to: Oct 16 2026)
 ```
 
@@ -190,14 +190,14 @@ Exits the chatbot and closes the application window.
 
 **Expected Outcome:**
 ```text
-BYEBYE!
+Cheerio! Until our next scholarly consultation.
 ```
 
 ---
 
 ### Automatic data saving and loading
 
-Kong automatically saves your tasks to `data/duke.txt` whenever you add, delete, or change the completion status of a task. The next time you start Kong, it automatically loads your previously saved tasks so you can pick up right where you left off.
+Professor Kong automatically saves your tasks to `data/duke.txt` whenever you add, delete, or change the completion status of a task. The next time you start Professor Kong, it automatically loads your previously saved tasks so you can pick up right where you left off.
 
 ----------------------------------------------------------------------------------------------------
 
