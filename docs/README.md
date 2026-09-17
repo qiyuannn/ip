@@ -9,7 +9,7 @@ Professor Kong is a distinguished desktop task-tracking chatbot designed to help
 ## Quick Start
 
 1. Ensure that **Java 25** is installed on your computer.
-2. Launch Professor Kong. The chat window will open and display Professor Kong's scholarly greeting.
+2. Open a terminal, navigate to the folder containing the `kong.jar` file, and run `java -jar kong.jar`. The chat window will open and display Professor Kong's scholarly greeting.
 3. Type a command in the input box at the bottom and press **Enter** (or click **Send**) to execute it.
 4. Try out some simple commands:
    * `todo read book` : Adds a new to-do task.
