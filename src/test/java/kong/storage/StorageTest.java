@@ -2,6 +2,7 @@ package kong.storage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
@@ -69,5 +70,37 @@ class StorageTest {
         assertEquals(2, loadedTasks.size());
         assertInstanceOf(Todo.class, loadedTasks.get(0));
         assertInstanceOf(Event.class, loadedTasks.get(1));
+    }
+
+    @Test
+    void loadTasksSkipsDuplicateRecordsAndInvertedEventDates() throws IOException {
+        Path dataFile = temporaryDirectory.resolve("corrupt_tasks.txt");
+        Files.writeString(dataFile, String.join(System.lineSeparator(),
+                "T | 1 | read book",
+                "T | 0 | read book",
+                "E | 0 | invalid event | 2019-10-20 | 2019-10-15",
+                "D | 0 | non-existent date | 2019-02-30",
+                "D | 0 | return book | 2019-10-15"));
+        Storage storage = new Storage(dataFile.toString());
+
+        ArrayList<Task> loadedTasks = storage.loadTasks();
+
+        assertEquals(2, loadedTasks.size());
+        assertInstanceOf(Todo.class, loadedTasks.get(0));
+        assertInstanceOf(Deadline.class, loadedTasks.get(1));
+    }
+
+    @Test
+    void loadTasksThrowsExceptionWhenFileIsDirectory() {
+        Storage storage = new Storage(temporaryDirectory.toString());
+
+        assertThrows(IOException.class, storage::loadTasks);
+    }
+
+    @Test
+    void saveTasksThrowsExceptionWhenTargetIsDirectory() {
+        Storage storage = new Storage(temporaryDirectory.toString());
+
+        assertThrows(IOException.class, () -> storage.saveTasks(new ArrayList<>()));
     }
 }

@@ -3,6 +3,7 @@ package kong.task;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -38,6 +39,7 @@ public class Event extends Task {
         super(desc, done);
         assert from != null : "An event start date must be validated before task creation";
         assert to != null : "An event end date must be validated before task creation";
+        assert !from.isAfter(to) : "An event start date cannot be after the end date";
         this.from = from;
         this.to = to;
     }
@@ -52,6 +54,33 @@ public class Event extends Task {
     @Override
     public Optional<LocalDate> getSortDate() {
         return Optional.of(this.from);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isSameTask(Task other) {
+        if (!super.isSameTask(other)) {
+            return false;
+        }
+        Event otherEvent = (Event) other;
+        return this.from.equals(otherEvent.from) && this.to.equals(otherEvent.to);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        Event other = (Event) obj;
+        return Objects.equals(this.from, other.from) && Objects.equals(this.to, other.to);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), this.from, this.to);
     }
 
     /** {@inheritDoc} */

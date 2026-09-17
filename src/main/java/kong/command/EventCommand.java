@@ -33,8 +33,11 @@ public class EventCommand extends Command {
     /** {@inheritDoc} */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws KongException {
-        int previousTaskCount = tasks.size();
         Task task = new Event(description, from, to);
+        if (tasks.hasDuplicate(task)) {
+            throw new KongException("This task already exists in your list.");
+        }
+        int previousTaskCount = tasks.size();
         tasks.add(task);
         assert tasks.size() == previousTaskCount + 1 : "Adding a task must increase the task count by one";
         ui.showTaskAdded(task);
