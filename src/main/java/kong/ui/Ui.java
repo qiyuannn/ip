@@ -38,9 +38,11 @@ public class Ui {
         this.output = output;
     }
 
-    /** Displays Kong's banner and greeting. */
+    /** Displays Professor Kong's banner and greeting. */
     public void showWelcome() {
-        output.accept(BANNER + LINE + "\n" + "Hello, I'm Kong.\nWhat can I do for you?");
+        output.accept(BANNER + LINE + "\n"
+                + "Greetings, esteemed colleague! I am Professor Kong.\n"
+                + "What grand endeavor or academic inquiry shall we pursue today?");
     }
 
     /** Displays a divider between command interactions. */
