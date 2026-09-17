@@ -3,6 +3,7 @@ package kong.task;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -47,6 +48,33 @@ public class Deadline extends Task {
     @Override
     public Optional<LocalDate> getSortDate() {
         return Optional.of(this.by);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isSameTask(Task other) {
+        if (!super.isSameTask(other)) {
+            return false;
+        }
+        Deadline otherDeadline = (Deadline) other;
+        return this.by.equals(otherDeadline.by);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!super.equals(obj)) {
+            return false;
+        }
+        Deadline other = (Deadline) obj;
+        return Objects.equals(this.by, other.by);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), this.by);
     }
 
     /** {@inheritDoc} */

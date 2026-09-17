@@ -1,7 +1,9 @@
 package kong.parser;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,10 +35,24 @@ public class Parser {
                     + "event <description> /from <date> /to <date>";
     private static final String ERROR_FIND_FORMAT =
             "Invalid command. A find command needs to be in the following format: find <keyword>";
-    private static final Pattern DEADLINE_PATTERN = Pattern.compile("^(.*?)\\s*/by\\s+(.*)$",
-            Pattern.CASE_INSENSITIVE);
-    private static final Pattern EVENT_PATTERN = Pattern.compile("^(.*?)\\s*/from\\s+(.*?)\\s*/to\\s+(.*)$",
-            Pattern.CASE_INSENSITIVE);
+
+    private static final Pattern DEADLINE_PATTERN =
+            Pattern.compile("^(.*?)\\s*/by\\s+(.*)$", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+    private static final Pattern EVENT_FROM_TO_PATTERN =
+            Pattern.compile("^(.*?)\\s*/from\\s+(.*?)\\s*/to\\s+(.*)$", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+    private static final Pattern EVENT_TO_FROM_PATTERN =
+            Pattern.compile("^(.*?)\\s*/to\\s+(.*?)\\s*/from\\s+(.*)$", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+
+    private static final Pattern BY_FLAG_PATTERN =
+            Pattern.compile("(?i)(?:^|(?<=\\s))/by(?:$|(?=\\s))");
+    private static final Pattern FROM_FLAG_PATTERN =
+            Pattern.compile("(?i)(?:^|(?<=\\s))/from(?:$|(?=\\s))");
+    private static final Pattern TO_FLAG_PATTERN =
+            Pattern.compile("(?i)(?:^|(?<=\\s))/to(?:$|(?=\\s))");
+
+    private static final Pattern DATE_SYNTAX_PATTERN = Pattern.compile("^\\d{4}-\\d{2}-\\d{2}$");
+    private static final DateTimeFormatter STRICT_DATE_FORMATTER =
+            DateTimeFormatter.ofPattern("uuuu-MM-dd").withResolverStyle(ResolverStyle.STRICT);
 
     /** Creates a parser. */
     public Parser() {
@@ -67,6 +83,9 @@ public class Parser {
             case EVENT:
                 return createEventCommand(arg);
             case LIST:
+                if (!arg.isBlank()) {
+                    throw new KongException("Invalid command. The list command does not take any arguments.");
+                }
                 return new ListCommand();
             case FIND:
                 return createFindCommand(arg);
@@ -79,6 +98,9 @@ public class Parser {
             case DELETE:
                 return new DeleteCommand(arg);
             case BYE:
+                if (!arg.isBlank()) {
+                    throw new KongException("Invalid command. The bye command does not take any arguments.");
+                }
                 return new ExitCommand();
             case UNKNOWN:
                 return new UnknownCommand();
@@ -88,11 +110,31 @@ public class Parser {
         }
     }
 
+    /**
+     * Validates that a task description is not blank and does not contain unsupported characters.
+     *
+     * @param description raw description to validate
+     * @return trimmed description
+     * @throws KongException if description contains forbidden characters
+     */
+    private static String validateDescription(String description) throws KongException {
+        String trimmed = description.trim();
+        if (trimmed.contains("|")) {
+            throw new KongException("Task description cannot contain the '|' character.");
+        }
+        if (trimmed.contains("\n") || trimmed.contains("\r")) {
+            throw new KongException("Task description cannot contain newline characters.");
+        }
+        return trimmed;
+    }
+
     /** Creates a todo command after validating its description. */
-    private static Command createTodoCommand(String description) throws KongException {
-        if (description.isEmpty()) {
+    private static Command createTodoCommand(String arg) throws KongException {
+        String trimmed = arg.trim();
+        if (trimmed.isEmpty()) {
             throw new KongException(ERROR_TODO_FORMAT);
         }
+        String description = validateDescription(trimmed);
         return new TodoCommand(description);
     }
 
@@ -110,18 +152,20 @@ public class Parser {
 
     /** Creates a date-query command after validating its date argument. */
     private static Command createOnDateCommand(String arg) throws KongException {
-        if (arg.isEmpty()) {
+        String trimmed = arg.trim();
+        if (trimmed.isEmpty()) {
             throw new KongException("Invalid command. An on command needs to be in the following format: on <date>");
         }
-        return new OnDateCommand(parseDate(arg));
+        return new OnDateCommand(parseDate(trimmed));
     }
 
     /** Creates a find command after validating its keyword. */
     private static Command createFindCommand(String keyword) throws KongException {
-        if (keyword.isEmpty()) {
+        String trimmed = keyword.trim();
+        if (trimmed.isEmpty()) {
             throw new KongException(ERROR_FIND_FORMAT);
         }
-        return new FindCommand(keyword);
+        return new FindCommand(trimmed);
     }
 
     /**
@@ -132,16 +176,26 @@ public class Parser {
      * @throws KongException if the arguments do not match the required format
      */
     private static DeadlineDetails parseDeadline(String arg) throws KongException {
-        Matcher matcher = DEADLINE_PATTERN.matcher(arg);
-        if (!matcher.find()) {
+        int byCount = countOccurrences(arg, BY_FLAG_PATTERN);
+        if (byCount > 1) {
+            throw new KongException("Invalid command. The /by parameter cannot be specified multiple times.");
+        }
+        if (byCount == 0) {
             throw new KongException(ERROR_DEADLINE_FORMAT);
         }
 
-        String description = matcher.group(1);
-        String by = matcher.group(2);
-        if (description.isEmpty() || by.isEmpty()) {
+        Matcher matcher = DEADLINE_PATTERN.matcher(arg.trim());
+        if (!matcher.matches()) {
             throw new KongException(ERROR_DEADLINE_FORMAT);
         }
+
+        String rawDescription = matcher.group(1).trim();
+        String by = matcher.group(2).trim();
+        if (rawDescription.isEmpty() || by.isEmpty()) {
+            throw new KongException(ERROR_DEADLINE_FORMAT);
+        }
+
+        String description = validateDescription(rawDescription);
         return new DeadlineDetails(description, parseDate(by));
     }
 
@@ -153,32 +207,85 @@ public class Parser {
      * @throws KongException if the arguments do not match the required format
      */
     private static EventDetails parseEvent(String arg) throws KongException {
-        Matcher matcher = EVENT_PATTERN.matcher(arg);
-        if (!matcher.find()) {
+        int fromCount = countOccurrences(arg, FROM_FLAG_PATTERN);
+        if (fromCount > 1) {
+            throw new KongException("Invalid command. The /from parameter cannot be specified multiple times.");
+        }
+        int toCount = countOccurrences(arg, TO_FLAG_PATTERN);
+        if (toCount > 1) {
+            throw new KongException("Invalid command. The /to parameter cannot be specified multiple times.");
+        }
+        if (fromCount == 0 || toCount == 0) {
             throw new KongException(ERROR_EVENT_FORMAT);
         }
 
-        String description = matcher.group(1);
-        String from = matcher.group(2);
-        String to = matcher.group(3);
-        if (description.isEmpty() || from.isEmpty() || to.isEmpty()) {
+        String rawDescription;
+        String from;
+        String to;
+
+        Matcher matcherFromTo = EVENT_FROM_TO_PATTERN.matcher(arg.trim());
+        if (matcherFromTo.matches()) {
+            rawDescription = matcherFromTo.group(1).trim();
+            from = matcherFromTo.group(2).trim();
+            to = matcherFromTo.group(3).trim();
+        } else {
+            Matcher matcherToFrom = EVENT_TO_FROM_PATTERN.matcher(arg.trim());
+            if (matcherToFrom.matches()) {
+                rawDescription = matcherToFrom.group(1).trim();
+                to = matcherToFrom.group(2).trim();
+                from = matcherToFrom.group(3).trim();
+            } else {
+                throw new KongException(ERROR_EVENT_FORMAT);
+            }
+        }
+
+        if (rawDescription.isEmpty() || from.isEmpty() || to.isEmpty()) {
             throw new KongException(ERROR_EVENT_FORMAT);
         }
-        return new EventDetails(description, parseDate(from), parseDate(to));
+
+        String description = validateDescription(rawDescription);
+        LocalDate fromDate = parseDate(from);
+        LocalDate toDate = parseDate(to);
+        if (fromDate.isAfter(toDate)) {
+            throw new KongException("Invalid command. The event start date cannot be after the end date.");
+        }
+
+        return new EventDetails(description, fromDate, toDate);
     }
 
     /**
-     * Parses a date in ISO {@code yyyy-MM-dd} format.
+     * Counts occurrences of a regular expression pattern in the provided text.
+     *
+     * @param text text to scan
+     * @param pattern regular expression pattern to match
+     * @return match count
+     */
+    private static int countOccurrences(String text, Pattern pattern) {
+        Matcher matcher = pattern.matcher(text);
+        int count = 0;
+        while (matcher.find()) {
+            count++;
+        }
+        return count;
+    }
+
+    /**
+     * Parses a date in ISO {@code yyyy-MM-dd} format with strict calendar validation.
      *
      * @param dateText date entered by the user
      * @return parsed date
-     * @throws KongException if the text is not a valid ISO date
+     * @throws KongException if the text is not a valid ISO date or does not exist on the calendar
      */
     private static LocalDate parseDate(String dateText) throws KongException {
-        try {
-            return LocalDate.parse(dateText);
-        } catch (DateTimeParseException e) {
+        String trimmed = dateText.trim();
+        if (!DATE_SYNTAX_PATTERN.matcher(trimmed).matches()) {
             throw new KongException("Invalid date. Please use the format yyyy-MM-dd, for example 2019-10-15.");
+        }
+        try {
+            return LocalDate.parse(trimmed, STRICT_DATE_FORMATTER);
+        } catch (DateTimeParseException e) {
+            throw new KongException(String.format("Invalid date. The date '%s' does not exist on the calendar.",
+                    trimmed));
         }
     }
 

@@ -416,3 +416,103 @@ bye
 Invalid command. A delete command needs to be followed by a number.
 BYEBYE!
 ```
+
+## TC22 Duplicate task rejection
+
+**Aim:** Check that adding a task with the same details as an existing task is rejected.
+
+### Input
+```text
+todo read book
+todo read book
+bye
+```
+
+### Expected Output
+```text
+Got it. I've added this task
+[T][ ] read book
+This task already exists in your list.
+BYEBYE!
+```
+
+## TC23 Non-existent calendar date
+
+**Aim:** Check that a date that does not exist on the calendar is rejected with a specific explanation.
+
+### Input
+```text
+deadline return book /by 2019-02-30
+bye
+```
+
+### Expected Output
+```text
+Invalid date. The date '2019-02-30' does not exist on the calendar.
+BYEBYE!
+```
+
+## TC24 Event start date after end date
+
+**Aim:** Check that an event whose start date is later than its end date is rejected.
+
+### Input
+```text
+event party /from 2019-10-20 /to 2019-10-15
+bye
+```
+
+### Expected Output
+```text
+Invalid command. The event start date cannot be after the end date.
+BYEBYE!
+```
+
+## TC25 Duplicate parameter in command
+
+**Aim:** Check that specifying a parameter multiple times is rejected.
+
+### Input
+```text
+deadline return book /by 2019-10-15 /by 2019-10-16
+bye
+```
+
+### Expected Output
+```text
+Invalid command. The /by parameter cannot be specified multiple times.
+BYEBYE!
+```
+
+## TC26 Forbidden pipe character in description
+
+**Aim:** Check that task descriptions containing the storage delimiter '|' are rejected.
+
+### Input
+```text
+todo buy milk | bread
+bye
+```
+
+### Expected Output
+```text
+Task description cannot contain the '|' character.
+BYEBYE!
+```
+
+## TC27 Extraneous arguments in no-argument commands
+
+**Aim:** Check that commands taking no arguments reject extraneous input.
+
+### Input
+```text
+list all
+bye
+```
+
+### Expected Output
+```text
+Invalid command. The list command does not take any arguments.
+BYEBYE!
+```
+

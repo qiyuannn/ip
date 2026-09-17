@@ -86,4 +86,40 @@ class TaskListTest {
         assertEquals(laterDeadline, tasks.get(2));
         assertEquals(todo, tasks.get(3));
     }
+
+    @Test
+    void hasDuplicateDetectsDuplicateTasksOfSameTypeAndDetails() {
+        TaskList tasks = new TaskList();
+        Task todo = new Todo("read book");
+        Task deadline = new Deadline("return book", LocalDate.parse("2019-10-15"));
+        Task event = new Event("conference", LocalDate.parse("2019-10-14"), LocalDate.parse("2019-10-16"));
+
+        tasks.add(todo);
+        tasks.add(deadline);
+        tasks.add(event);
+
+        assertTrue(tasks.hasDuplicate(new Todo("read book")));
+        assertTrue(tasks.hasDuplicate(new Todo("READ BOOK")));
+        assertTrue(tasks.hasDuplicate(new Deadline("Return Book", LocalDate.parse("2019-10-15"))));
+        assertTrue(tasks.hasDuplicate(new Event("CONFERENCE", LocalDate.parse("2019-10-14"),
+                LocalDate.parse("2019-10-16"))));
+
+        assertFalse(tasks.hasDuplicate(new Todo("other book")));
+        assertFalse(tasks.hasDuplicate(new Deadline("return book", LocalDate.parse("2019-10-16"))));
+        assertFalse(tasks.hasDuplicate(new Event("conference", LocalDate.parse("2019-10-14"),
+                LocalDate.parse("2019-10-15"))));
+    }
+
+    @Test
+    void constructorFiltersOutDuplicateTasks() {
+        java.util.ArrayList<Task> taskList = new java.util.ArrayList<>();
+        taskList.add(new Todo("read book"));
+        taskList.add(new Todo("READ BOOK"));
+        taskList.add(new Deadline("return book", LocalDate.parse("2019-10-15")));
+        taskList.add(new Deadline("return book", LocalDate.parse("2019-10-15")));
+
+        TaskList tasks = new TaskList(taskList);
+
+        assertEquals(2, tasks.size());
+    }
 }

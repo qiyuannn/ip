@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 import kong.task.Deadline;
 import kong.task.Event;
@@ -31,7 +31,7 @@ public class Storage {
     }
 
     /**
-     * Loads valid tasks from disk, skipping malformed lines.
+     * Loads valid tasks from disk, skipping malformed and duplicate lines.
      *
      * @return tasks found in the data file, or an empty list if it does not exist
      * @throws IOException if the data path cannot be read as a regular file
@@ -44,11 +44,17 @@ public class Storage {
         if (!Files.isRegularFile(filePath)) {
             throw new IOException("The data path is not a regular file.");
         }
+        if (!Files.isReadable(filePath)) {
+            throw new IOException("Access denied: cannot read the data file.");
+        }
 
-        return Files.readAllLines(filePath).stream()
-                .map(Storage::parseTask)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toCollection(ArrayList::new));
+        for (String line : Files.readAllLines(filePath)) {
+            Task task = parseTask(line);
+            if (task != null && tasks.stream().noneMatch(existing -> existing.isSameTask(task))) {
+                tasks.add(task);
+            }
+        }
+        return tasks;
     }
 
     /**
@@ -58,8 +64,18 @@ public class Storage {
      * @throws IOException if the data file cannot be written
      */
     public void saveTasks(ArrayList<Task> tasks) throws IOException {
+        if (Files.exists(filePath) && Files.isDirectory(filePath)) {
+            throw new IOException("The data path is a directory, not a regular file.");
+        }
+        if (Files.exists(filePath) && !Files.isWritable(filePath)) {
+            throw new IOException("Access denied: cannot write to the data file.");
+        }
+
         Path folderPath = filePath.getParent();
         if (folderPath != null) {
+            if (Files.exists(folderPath) && !Files.isWritable(folderPath)) {
+                throw new IOException("Access denied: cannot write to parent directory.");
+            }
             Files.createDirectories(folderPath);
         }
 
@@ -134,7 +150,7 @@ public class Storage {
 
         LocalDate startDate = parseDate(getPart(parts, 3));
         LocalDate endDate = parseDate(getPart(parts, 4));
-        if (startDate == null || endDate == null) {
+        if (startDate == null || endDate == null || startDate.isAfter(endDate)) {
             return null;
         }
         return new Event(description, isDone, startDate, endDate);
@@ -170,6 +186,9 @@ public class Storage {
         return null;
     }
 
+    private static final DateTimeFormatter STRICT_DATE_FORMATTER =
+            DateTimeFormatter.ofPattern("uuuu-MM-dd").withResolverStyle(ResolverStyle.STRICT);
+
     /**
      * Parses an ISO date without allowing malformed records to stop loading.
      *
@@ -181,7 +200,7 @@ public class Storage {
             return null;
         }
         try {
-            return LocalDate.parse(dateText);
+            return LocalDate.parse(dateText, STRICT_DATE_FORMATTER);
         } catch (DateTimeParseException e) {
             return null;
         }

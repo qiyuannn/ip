@@ -1,6 +1,7 @@
 package kong.task;
 
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -27,6 +28,8 @@ public class Task {
      */
     public Task(String desc, boolean isDone) {
         assert desc != null && !desc.isBlank() : "A task description must be validated before task creation";
+        assert !desc.contains("|") : "A task description cannot contain '|'";
+        assert !desc.contains("\n") && !desc.contains("\r") : "A task description cannot contain newline characters";
         this.description = desc;
         this.isDone = isDone;
     }
@@ -84,6 +87,37 @@ public class Task {
      */
     public Optional<LocalDate> getSortDate() {
         return Optional.empty();
+    }
+
+    /**
+     * Checks whether another task has the same identity and details as this task.
+     *
+     * @param other task to compare against
+     * @return {@code true} if both tasks represent the same task
+     */
+    public boolean isSameTask(Task other) {
+        if (other == null || !getClass().equals(other.getClass())) {
+            return false;
+        }
+        return this.description.trim().equalsIgnoreCase(other.description.trim());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || !getClass().equals(obj.getClass())) {
+            return false;
+        }
+        Task other = (Task) obj;
+        return this.isDone == other.isDone
+                && this.description.trim().equalsIgnoreCase(other.description.trim());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getClass(), this.description.trim().toLowerCase(), this.isDone);
     }
 
     /**

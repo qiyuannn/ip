@@ -23,14 +23,19 @@ public class TaskList {
     }
 
     /**
-     * Creates a task list backed by the supplied collection.
+     * Creates a task list backed by the supplied collection, ignoring duplicate tasks.
      *
      * @param tasks non-null initial task collection
      */
     public TaskList(ArrayList<Task> tasks) {
         assert tasks != null : "A task list must be initialized with a collection";
         assert !tasks.contains(null) : "A task list cannot be initialized with null tasks";
-        this.tasks = tasks;
+        this.tasks = new ArrayList<>();
+        for (Task task : tasks) {
+            if (!hasDuplicate(task)) {
+                this.tasks.add(task);
+            }
+        }
         this.tasks.sort(CHRONOLOGICAL_COMPARATOR);
     }
 
@@ -117,5 +122,16 @@ public class TaskList {
         return tasks.stream()
                 .filter(task -> task.getDescription().toLowerCase(Locale.ROOT).contains(normalizedKeyword))
                 .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    /**
+     * Checks whether an identical task already exists in the task list.
+     *
+     * @param task task to check
+     * @return {@code true} if a task with the same details exists
+     */
+    public boolean hasDuplicate(Task task) {
+        assert task != null : "Cannot check for duplicate of null task";
+        return tasks.stream().anyMatch(existing -> existing.isSameTask(task));
     }
 }

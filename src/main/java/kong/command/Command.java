@@ -45,7 +45,10 @@ public abstract class Command {
         try {
             storage.saveTasks(tasks.asList());
         } catch (IOException e) {
-            throw new KongException("Unable to save tasks to disk.");
+            String detail = (e.getMessage() != null && !e.getMessage().isBlank())
+                    ? ": " + e.getMessage()
+                    : ".";
+            throw new KongException("Unable to save tasks to disk" + detail);
         }
     }
 
@@ -59,7 +62,7 @@ public abstract class Command {
      */
     protected int parseTaskIndex(String arg, String commandName) throws KongException {
         try {
-            return Integer.parseInt(arg) - 1;
+            return Integer.parseInt(arg.trim()) - 1;
         } catch (NumberFormatException e) {
             throw new KongException(String.format("Invalid command. A %s command needs to be followed by a number.",
                     commandName));

@@ -70,6 +70,53 @@ class ParserTest {
         assertParseError("on tomorrow", expectedMessage);
     }
 
+    @Test
+    void parseThrowsHelpfulExceptionForNonExistentDates() {
+        assertParseError("deadline return book /by 2019-02-30",
+                "Invalid date. The date '2019-02-30' does not exist on the calendar.");
+        assertParseError("deadline return book /by 2019-02-29",
+                "Invalid date. The date '2019-02-29' does not exist on the calendar.");
+        assertParseError("event party /from 2019-04-31 /to 2019-05-01",
+                "Invalid date. The date '2019-04-31' does not exist on the calendar.");
+    }
+
+    @Test
+    void parseThrowsHelpfulExceptionForDuplicateParameters() {
+        assertParseError("deadline return book /by 2019-10-15 /by 2019-10-16",
+                "Invalid command. The /by parameter cannot be specified multiple times.");
+        assertParseError("event party /from 2019-10-15 /to 2019-10-16 /from 2019-10-17",
+                "Invalid command. The /from parameter cannot be specified multiple times.");
+        assertParseError("event party /from 2019-10-15 /to 2019-10-16 /to 2019-10-17",
+                "Invalid command. The /to parameter cannot be specified multiple times.");
+    }
+
+    @Test
+    void parseThrowsHelpfulExceptionForEventStartDateAfterEndDate() {
+        assertParseError("event party /from 2019-10-16 /to 2019-10-15",
+                "Invalid command. The event start date cannot be after the end date.");
+    }
+
+    @Test
+    void parseThrowsHelpfulExceptionForSpecialCharactersInDescription() {
+        assertParseError("todo read | book", "Task description cannot contain the '|' character.");
+        assertParseError("deadline return | book /by 2019-10-15",
+                "Task description cannot contain the '|' character.");
+        assertParseError("event party | dance /from 2019-10-15 /to 2019-10-16",
+                "Task description cannot contain the '|' character.");
+        assertParseError("todo read\nbook", "Task description cannot contain newline characters.");
+    }
+
+    @Test
+    void parseThrowsHelpfulExceptionForExtraneousArguments() {
+        assertParseError("list extra", "Invalid command. The list command does not take any arguments.");
+        assertParseError("bye now", "Invalid command. The bye command does not take any arguments.");
+    }
+
+    @Test
+    void parseAcceptsEventParametersInBothOrders() throws KongException {
+        assertInstanceOf(EventCommand.class, Parser.parse("event party /to 2019-10-16 /from 2019-10-15"));
+    }
+
     private static void assertParseError(String input, String expectedMessage) {
         KongException exception = assertThrows(KongException.class, () -> Parser.parse(input));
 

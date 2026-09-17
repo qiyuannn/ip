@@ -66,4 +66,25 @@ class KongTest {
 
         assertTrue(response.indexOf("earlier") < response.indexOf("later"));
     }
+
+    @Test
+    void getResponseRejectsDuplicateTask() {
+        Kong kong = new Kong(temporaryDirectory.resolve("data/tasks.txt").toString());
+        kong.getResponse("todo read book");
+
+        String duplicateResponse = kong.getResponse("todo read book");
+
+        assertTrue(duplicateResponse.contains("This task already exists in your list."));
+        assertTrue(kong.isLastError());
+    }
+
+    @Test
+    void getResponseReportsErrorForExtraArgumentInList() {
+        Kong kong = new Kong(temporaryDirectory.resolve("data/tasks.txt").toString());
+
+        String response = kong.getResponse("list all");
+
+        assertTrue(response.contains("The list command does not take any arguments."));
+        assertTrue(kong.isLastError());
+    }
 }
