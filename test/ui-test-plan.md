@@ -17,7 +17,7 @@ bye
 ### Expected Output
 ```text
 Invalid command. A todo command needs to be in the following format: todo <description>
-BYEBYE!
+Cheerio! Until our next scholarly consultation.
 ```
 
 ## TC2 Unknown command
@@ -33,7 +33,7 @@ bye
 ### Expected Output
 ```text
 Sorry we do not recognise that command yet.
-BYEBYE!
+Cheerio! Until our next scholarly consultation.
 ```
 
 ## TC3 Empty deadline description
@@ -49,7 +49,7 @@ bye
 ### Expected Output
 ```text
 Invalid command. A deadline command needs to be in the following format: deadline <description> /by <date>
-BYEBYE!
+Cheerio! Until our next scholarly consultation.
 ```
 
 ## TC4 Empty event from value
@@ -65,7 +65,7 @@ bye
 ### Expected Output
 ```text
 Invalid command. An event command needs to be in the following format: event <description> /from <date> /to <date>
-BYEBYE!
+Cheerio! Until our next scholarly consultation.
 ```
 
 ## TC5 Invalid mark number
@@ -81,7 +81,7 @@ bye
 ### Expected Output
 ```text
 This task number is invalid. You currently have 0 tasks in your list.
-BYEBYE!
+Cheerio! Until our next scholarly consultation.
 ```
 
 
@@ -101,17 +101,17 @@ bye
 
 ### Expected Output
 ```text
-Got it. I've added this task
+Splendid addition! I have inscribed this task into your archives:
 [T][ ] read book
-Got it. I've added this task.
+Splendid addition! I have inscribed this task into your archives:
 [D][ ] return book (by: Oct 15 2019)
-Got it. I've added this task.
+Splendid addition! I have inscribed this task into your archives:
 [E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)
-I've marked this task as done.
+Capital progress! I have marked this task as completed:
 [T][X] read book
-The following task have been removed.
+Expunged from the archives! The following task has been removed:
 [D][ ] return book (by: Oct 15 2019)
-BYEBYE!
+Cheerio! Until our next scholarly consultation.
 ```
 
 ### Expected Saved File
@@ -144,7 +144,7 @@ Here are the tasks in your list.
 1. [D][ ] return book (by: Oct 15 2019)
 2. [E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)
 3. [T][X] read book
-BYEBYE!
+Cheerio! Until our next scholarly consultation.
 ```
 
 
@@ -161,7 +161,7 @@ bye
 ### Expected Output
 ```text
 There are currently no tasks in your list.
-BYEBYE!
+Cheerio! Until our next scholarly consultation.
 ```
 
 
@@ -192,7 +192,7 @@ bye
 Here are the tasks in your list.
 1. [E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)
 2. [T][X] read book
-BYEBYE!
+Cheerio! Until our next scholarly consultation.
 ```
 
 
@@ -209,7 +209,7 @@ bye
 ### Expected Output
 ```text
 Invalid date. Please use the format yyyy-MM-dd, for example 2019-10-15.
-BYEBYE!
+Cheerio! Until our next scholarly consultation.
 ```
 
 ## TC11 Invalid event date
@@ -225,7 +225,7 @@ bye
 ### Expected Output
 ```text
 Invalid date. Please use the format yyyy-MM-dd, for example 2019-10-15.
-BYEBYE!
+Cheerio! Until our next scholarly consultation.
 ```
 
 
@@ -248,7 +248,7 @@ bye
 Here are the deadlines and events on this date.
 1. [E][ ] conference (from: Oct 14 2019 to: Oct 16 2019)
 2. [D][ ] return book (by: Oct 15 2019)
-BYEBYE!
+Cheerio! Until our next scholarly consultation.
 ```
 
 ## TC13 No tasks on date
@@ -265,7 +265,7 @@ bye
 ### Expected Output
 ```text
 There are no deadlines or events on this date.
-BYEBYE!
+Cheerio! Until our next scholarly consultation.
 ```
 
 ## TC14 Invalid on date
@@ -281,7 +281,7 @@ bye
 ### Expected Output
 ```text
 Invalid date. Please use the format yyyy-MM-dd, for example 2019-10-15.
-BYEBYE!
+Cheerio! Until our next scholarly consultation.
 ```
 
 ## TC15 Empty on date
@@ -297,7 +297,7 @@ bye
 ### Expected Output
 ```text
 Invalid command. An on command needs to be in the following format: on <date>
-BYEBYE!
+Cheerio! Until our next scholarly consultation.
 ```
 
 ## TC16 Divider after exit
@@ -311,7 +311,7 @@ bye
 
 ### Expected Output
 ```text
-BYEBYE!
+Cheerio! Until our next scholarly consultation.
 ________________________________________
 ```
 
@@ -333,7 +333,7 @@ bye
 Here are the matching tasks in your list:
 1. [D][ ] return book (by: Oct 15 2019)
 2. [T][ ] read book
-BYEBYE!
+Cheerio! Until our next scholarly consultation.
 ```
 
 ## TC18 No matching tasks
@@ -350,7 +350,7 @@ bye
 ### Expected Output
 ```text
 There are no matching tasks in your list.
-BYEBYE!
+Cheerio! Until our next scholarly consultation.
 ```
 
 ## TC19 Empty find keyword
@@ -366,7 +366,7 @@ bye
 ### Expected Output
 ```text
 Invalid command. A find command needs to be in the following format: find <keyword>
-BYEBYE!
+Cheerio! Until our next scholarly consultation.
 ```
 
 ## TC20 Insert tasks chronologically
@@ -390,7 +390,7 @@ Here are the tasks in your list.
 2. [D][ ] return book (by: Oct 14 2019)
 3. [D][ ] submit report (by: Oct 20 2019)
 4. [T][ ] read book
-BYEBYE!
+Cheerio! Until our next scholarly consultation.
 ```
 
 ### Expected Saved File
@@ -414,7 +414,7 @@ bye
 ### Expected Output
 ```text
 Invalid command. A delete command needs to be followed by a number.
-BYEBYE!
+Cheerio! Until our next scholarly consultation.
 ```
 
 ## TC22 Duplicate task rejection
@@ -430,10 +430,10 @@ bye
 
 ### Expected Output
 ```text
-Got it. I've added this task
+Splendid addition! I have inscribed this task into your archives:
 [T][ ] read book
 This task already exists in your list.
-BYEBYE!
+Cheerio! Until our next scholarly consultation.
 ```
 
 ## TC23 Non-existent calendar date
@@ -449,7 +449,7 @@ bye
 ### Expected Output
 ```text
 Invalid date. The date '2019-02-30' does not exist on the calendar.
-BYEBYE!
+Cheerio! Until our next scholarly consultation.
 ```
 
 ## TC24 Event start date after end date
@@ -465,7 +465,7 @@ bye
 ### Expected Output
 ```text
 Invalid command. The event start date cannot be after the end date.
-BYEBYE!
+Cheerio! Until our next scholarly consultation.
 ```
 
 ## TC25 Duplicate parameter in command
@@ -481,7 +481,7 @@ bye
 ### Expected Output
 ```text
 Invalid command. The /by parameter cannot be specified multiple times.
-BYEBYE!
+Cheerio! Until our next scholarly consultation.
 ```
 
 ## TC26 Forbidden pipe character in description
@@ -497,7 +497,7 @@ bye
 ### Expected Output
 ```text
 Task description cannot contain the '|' character.
-BYEBYE!
+Cheerio! Until our next scholarly consultation.
 ```
 
 ## TC27 Extraneous arguments in no-argument commands
@@ -513,7 +513,7 @@ bye
 ### Expected Output
 ```text
 Invalid command. The list command does not take any arguments.
-BYEBYE!
+Cheerio! Until our next scholarly consultation.
 ```
 
 ## TC28 Blank command input
@@ -529,7 +529,7 @@ bye
 ### Expected Output
 ```text
 Please enter a command.
-BYEBYE!
+Cheerio! Until our next scholarly consultation.
 ```
 
 ## TC29 Invalid unmark number
@@ -545,7 +545,7 @@ bye
 ### Expected Output
 ```text
 Invalid command. A unmark command needs to be followed by a number.
-BYEBYE!
+Cheerio! Until our next scholarly consultation.
 ```
 
 ## TC30 Zero task number
@@ -561,7 +561,7 @@ bye
 ### Expected Output
 ```text
 This task number is invalid. You currently have 0 tasks in your list.
-BYEBYE!
+Cheerio! Until our next scholarly consultation.
 ```
 
 

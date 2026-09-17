@@ -33,7 +33,8 @@ class UnmarkCommandTest {
         command.execute(tasks, ui, storage);
 
         assertEquals("[T][ ] read book", tasks.get(0).toString());
-        assertTrue(output.contains("I've marked this task as undone."));
+        assertTrue(output.contains(
+                "Back to the drawing board! I have restored this task to pending status:"));
         assertEquals(1, storage.loadTasks().size());
         assertEquals("[T][ ] read book", storage.loadTasks().get(0).toString());
     }

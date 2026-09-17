@@ -33,7 +33,7 @@ class DeleteCommandTest {
         command.execute(tasks, ui, storage);
 
         assertTrue(tasks.isEmpty());
-        assertTrue(output.contains("The following task have been removed."));
+        assertTrue(output.contains("Expunged from the archives! The following task has been removed:"));
         assertEquals(0, storage.loadTasks().size());
     }
 

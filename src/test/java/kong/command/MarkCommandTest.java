@@ -33,7 +33,7 @@ class MarkCommandTest {
         command.execute(tasks, ui, storage);
 
         assertEquals("[T][X] read book", tasks.get(0).toString());
-        assertTrue(output.contains("I've marked this task as done."));
+        assertTrue(output.contains("Capital progress! I have marked this task as completed:"));
         assertEquals(1, storage.loadTasks().size());
         assertEquals("[T][X] read book", storage.loadTasks().get(0).toString());
     }

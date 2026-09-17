@@ -140,7 +140,7 @@ class UiTest {
     }
 
     @Test
-    void showTaskAdded_todo_displaysMessageWithoutPeriod() {
+    void showTaskAdded_todo_displaysConfirmation() {
         List<String> output = new ArrayList<>();
         Ui ui = new Ui(output::add);
         Todo todo = new Todo("read book");
@@ -148,12 +148,12 @@ class UiTest {
         ui.showTaskAdded(todo);
 
         assertEquals(2, output.size());
-        assertEquals("Got it. I've added this task", output.get(0));
+        assertEquals("Splendid addition! I have inscribed this task into your archives:", output.get(0));
         assertEquals("[T][ ] read book", output.get(1));
     }
 
     @Test
-    void showTaskAdded_deadlineAndEvent_displaysMessageWithPeriod() {
+    void showTaskAdded_deadlineAndEvent_displaysConfirmation() {
         List<String> output = new ArrayList<>();
         Ui ui = new Ui(output::add);
         Deadline deadline = new Deadline("return book", LocalDate.parse("2019-10-15"));
@@ -163,9 +163,9 @@ class UiTest {
         ui.showTaskAdded(event);
 
         assertEquals(4, output.size());
-        assertEquals("Got it. I've added this task.", output.get(0));
+        assertEquals("Splendid addition! I have inscribed this task into your archives:", output.get(0));
         assertEquals("[D][ ] return book (by: Oct 15 2019)", output.get(1));
-        assertEquals("Got it. I've added this task.", output.get(2));
+        assertEquals("Splendid addition! I have inscribed this task into your archives:", output.get(2));
         assertEquals("[E][ ] conference (from: Oct 15 2019 to: Oct 16 2019)", output.get(3));
     }
 
@@ -177,7 +177,8 @@ class UiTest {
 
         ui.showTaskMarked(todo);
 
-        assertEquals(List.of("I've marked this task as done.", "[T][X] read book"), output);
+        assertEquals(List.of("Capital progress! I have marked this task as completed:",
+                "[T][X] read book"), output);
     }
 
     @Test
@@ -188,7 +189,8 @@ class UiTest {
 
         ui.showTaskUnmarked(todo);
 
-        assertEquals(List.of("I've marked this task as undone.", "[T][ ] read book"), output);
+        assertEquals(List.of("Back to the drawing board! I have restored this task to pending status:",
+                "[T][ ] read book"), output);
     }
 
     @Test
@@ -199,7 +201,8 @@ class UiTest {
 
         ui.showTaskDeleted(todo);
 
-        assertEquals(List.of("The following task have been removed.", "[T][ ] read book"), output);
+        assertEquals(List.of("Expunged from the archives! The following task has been removed:",
+                "[T][ ] read book"), output);
     }
 
     @Test
@@ -209,7 +212,7 @@ class UiTest {
 
         ui.showGoodbye();
 
-        assertEquals(List.of("BYEBYE!"), output);
+        assertEquals(List.of("Cheerio! Until our next scholarly consultation."), output);
     }
 
     @Test
