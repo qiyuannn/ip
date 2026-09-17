@@ -97,7 +97,7 @@ class KongTest {
 
         String response = kong.getResponse("list");
 
-        assertTrue(response.contains("There are currently no tasks in your list."));
+        assertTrue(response.contains("Your archive is pristine. There are currently no tasks in your list."));
     }
 
     @Test
@@ -114,10 +114,11 @@ class KongTest {
                 "Back to the drawing board! I have restored this task to pending status:"));
 
         String findResponse = kong.getResponse("find book");
-        assertTrue(findResponse.contains("Here are the matching tasks in your list:"));
+        assertTrue(findResponse.contains("Eureka! Here are the matching tasks found in your archives:"));
 
         String onDateResponse = kong.getResponse("on 2019-10-15");
-        assertTrue(onDateResponse.contains("Here are the deadlines and events on this date."));
+        assertTrue(onDateResponse.contains(
+                "Consulting the ledger. Here are the deadlines and events on this date:"));
     }
 
     @Test
@@ -126,7 +127,7 @@ class KongTest {
 
         String response = kong.getResponse("foobar");
 
-        assertTrue(response.contains("Sorry we do not recognise that command yet."));
+        assertTrue(response.contains("Confound it! I do not recognise that command in my lexicon."));
         assertTrue(kong.isLastError());
     }
 

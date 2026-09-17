@@ -30,7 +30,8 @@ class OnDateCommandTest {
 
         command.execute(tasks, ui, storage);
 
-        assertTrue(output.contains("Here are the deadlines and events on this date."));
+        assertTrue(output.contains(
+                "Consulting the ledger. Here are the deadlines and events on this date:"));
         assertTrue(output.contains("1. [D][ ] return book (by: Oct 15 2019)"));
     }
 
@@ -44,6 +45,6 @@ class OnDateCommandTest {
 
         command.execute(tasks, ui, storage);
 
-        assertTrue(output.contains("There are no deadlines or events on this date."));
+        assertTrue(output.contains("The ledger is clear. There are no deadlines or events on this date."));
     }
 }

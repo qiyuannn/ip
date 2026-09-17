@@ -32,7 +32,7 @@ bye
 
 ### Expected Output
 ```text
-Sorry we do not recognise that command yet.
+Confound it! I do not recognise that command in my lexicon.
 Cheerio! Until our next scholarly consultation.
 ```
 
@@ -140,7 +140,7 @@ bye
 
 ### Expected Output
 ```text
-Here are the tasks in your list.
+Here are the tasks currently recorded in your archives:
 1. [D][ ] return book (by: Oct 15 2019)
 2. [E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)
 3. [T][X] read book
@@ -160,7 +160,7 @@ bye
 
 ### Expected Output
 ```text
-There are currently no tasks in your list.
+Your archive is pristine. There are currently no tasks in your list.
 Cheerio! Until our next scholarly consultation.
 ```
 
@@ -189,7 +189,7 @@ bye
 
 ### Expected Output
 ```text
-Here are the tasks in your list.
+Here are the tasks currently recorded in your archives:
 1. [E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)
 2. [T][X] read book
 Cheerio! Until our next scholarly consultation.
@@ -245,7 +245,7 @@ bye
 
 ### Expected Output
 ```text
-Here are the deadlines and events on this date.
+Consulting the ledger. Here are the deadlines and events on this date:
 1. [E][ ] conference (from: Oct 14 2019 to: Oct 16 2019)
 2. [D][ ] return book (by: Oct 15 2019)
 Cheerio! Until our next scholarly consultation.
@@ -264,7 +264,7 @@ bye
 
 ### Expected Output
 ```text
-There are no deadlines or events on this date.
+The ledger is clear. There are no deadlines or events on this date.
 Cheerio! Until our next scholarly consultation.
 ```
 
@@ -330,7 +330,7 @@ bye
 
 ### Expected Output
 ```text
-Here are the matching tasks in your list:
+Eureka! Here are the matching tasks found in your archives:
 1. [D][ ] return book (by: Oct 15 2019)
 2. [T][ ] read book
 Cheerio! Until our next scholarly consultation.
@@ -349,7 +349,7 @@ bye
 
 ### Expected Output
 ```text
-There are no matching tasks in your list.
+Search complete. There are no matching tasks in your list.
 Cheerio! Until our next scholarly consultation.
 ```
 
@@ -385,7 +385,7 @@ bye
 
 ### Expected Output
 ```text
-Here are the tasks in your list.
+Here are the tasks currently recorded in your archives:
 1. [E][ ] conference (from: Oct 14 2019 to: Oct 16 2019)
 2. [D][ ] return book (by: Oct 14 2019)
 3. [D][ ] submit report (by: Oct 20 2019)

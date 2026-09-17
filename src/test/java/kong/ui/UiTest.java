@@ -62,7 +62,7 @@ class UiTest {
 
         ui.showLoadingError();
 
-        assertEquals(List.of("Unable to load tasks from disk. Starting with an empty list."), output);
+        assertEquals(List.of("Heavens! Unable to load tasks from disk. Starting with an empty archive."), output);
     }
 
     @Test
@@ -72,7 +72,7 @@ class UiTest {
 
         ui.showTaskList(new TaskList());
 
-        assertEquals(List.of("There are currently no tasks in your list."), output);
+        assertEquals(List.of("Your archive is pristine. There are currently no tasks in your list."), output);
     }
 
     @Test
@@ -86,7 +86,7 @@ class UiTest {
         ui.showTaskList(tasks);
 
         assertEquals(3, output.size());
-        assertEquals("Here are the tasks in your list.", output.get(0));
+        assertEquals("Here are the tasks currently recorded in your archives:", output.get(0));
         assertEquals("1. [T][ ] read book", output.get(1));
         assertEquals("2. [T][ ] write code", output.get(2));
     }
@@ -98,7 +98,7 @@ class UiTest {
 
         ui.showTasksOnDate(new ArrayList<>());
 
-        assertEquals(List.of("There are no deadlines or events on this date."), output);
+        assertEquals(List.of("The ledger is clear. There are no deadlines or events on this date."), output);
     }
 
     @Test
@@ -111,7 +111,7 @@ class UiTest {
         ui.showTasksOnDate(tasks);
 
         assertEquals(2, output.size());
-        assertEquals("Here are the deadlines and events on this date.", output.get(0));
+        assertEquals("Consulting the ledger. Here are the deadlines and events on this date:", output.get(0));
         assertEquals("1. [D][ ] return book (by: Oct 15 2019)", output.get(1));
     }
 
@@ -122,7 +122,7 @@ class UiTest {
 
         ui.showMatchingTasks(new ArrayList<>());
 
-        assertEquals(List.of("There are no matching tasks in your list."), output);
+        assertEquals(List.of("Search complete. There are no matching tasks in your list."), output);
     }
 
     @Test
@@ -135,7 +135,7 @@ class UiTest {
         ui.showMatchingTasks(tasks);
 
         assertEquals(2, output.size());
-        assertEquals("Here are the matching tasks in your list:", output.get(0));
+        assertEquals("Eureka! Here are the matching tasks found in your archives:", output.get(0));
         assertEquals("1. [T][ ] read book", output.get(1));
     }
 

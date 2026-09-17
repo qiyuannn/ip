@@ -29,7 +29,7 @@ class ListCommandTest {
 
         command.execute(tasks, ui, storage);
 
-        assertTrue(output.contains("Here are the tasks in your list."));
+        assertTrue(output.contains("Here are the tasks currently recorded in your archives:"));
         assertTrue(output.contains("1. [T][ ] read book"));
     }
 }

@@ -16,6 +16,6 @@ public class UnknownCommand extends Command {
     /** {@inheritDoc} */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws KongException {
-        throw new KongException("Sorry we do not recognise that command yet.");
+        throw new KongException("Confound it! I do not recognise that command in my lexicon.");
     }
 }
