@@ -26,6 +26,8 @@ Professor Kong is a distinguished desktop task-tracking chatbot designed to help
 >
 > * Words in `<angle brackets>` are parameters to be supplied by the user.  
 >   For example, in `todo <description>`, `<description>` can be `read book`.
+> * `<task_number>` must be a valid positive integer corresponding to the index in your current task list.
+> * Command words are case-insensitive (e.g., `TODO`, `list`, and `bye` will all be recognized).
 > * Dates must follow the strict `yyyy-MM-dd` format (e.g., `2026-10-15`). Calendar dates that do not exist (e.g., `2026-02-30`) are rejected.
 > * Task descriptions cannot contain the vertical bar `|` character or newline characters.
 > * Tasks are automatically ordered **chronologically**: deadlines and events are sorted by date, while undated to-dos appear at the end.
@@ -120,6 +122,7 @@ Capital progress! I have marked this task as completed:
 Marks a completed task back to incomplete.
 
 * **Format:** `unmark <task_number>`
+* **Note:** `<task_number>` must be a valid 1-based index from the latest task list.
 * **Example:** `unmark 2`
 
 **Expected Outcome:**
@@ -172,6 +175,7 @@ Consulting the ledger. Here are the deadlines and events on this date:
 Permanently removes a task from the list at the specified index.
 
 * **Format:** `delete <task_number>`
+* **Note:** `<task_number>` must be a valid 1-based index from the latest task list.
 * **Example:** `delete 1`
 
 **Expected Outcome:**
