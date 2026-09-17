@@ -79,7 +79,7 @@ public class Ui {
 
     /** Displays a warning when stored tasks cannot be loaded. */
     public void showLoadingError() {
-        output.accept("Unable to load tasks from disk. Starting with an empty list.");
+        output.accept("Heavens! Unable to load tasks from disk. Starting with an empty archive.");
     }
 
     /**
@@ -89,11 +89,11 @@ public class Ui {
      */
     public void showTaskList(TaskList tasks) {
         if (tasks.isEmpty()) {
-            output.accept("There are currently no tasks in your list.");
+            output.accept("Your archive is pristine. There are currently no tasks in your list.");
             return;
         }
 
-        output.accept("Here are the tasks in your list.");
+        output.accept("Here are the tasks currently recorded in your archives:");
         showNumberedTasks(tasks.asList());
     }
 
@@ -104,11 +104,11 @@ public class Ui {
      */
     public void showTasksOnDate(ArrayList<Task> matchingTasks) {
         if (matchingTasks.isEmpty()) {
-            output.accept("There are no deadlines or events on this date.");
+            output.accept("The ledger is clear. There are no deadlines or events on this date.");
             return;
         }
 
-        output.accept("Here are the deadlines and events on this date.");
+        output.accept("Consulting the ledger. Here are the deadlines and events on this date:");
         showNumberedTasks(matchingTasks);
     }
 
@@ -119,11 +119,11 @@ public class Ui {
      */
     public void showMatchingTasks(ArrayList<Task> matchingTasks) {
         if (matchingTasks.isEmpty()) {
-            output.accept("There are no matching tasks in your list.");
+            output.accept("Search complete. There are no matching tasks in your list.");
             return;
         }
 
-        output.accept("Here are the matching tasks in your list:");
+        output.accept("Eureka! Here are the matching tasks found in your archives:");
         showNumberedTasks(matchingTasks);
     }
 

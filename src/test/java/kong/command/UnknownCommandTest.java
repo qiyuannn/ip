@@ -27,6 +27,6 @@ class UnknownCommandTest {
         KongException exception = assertThrows(KongException.class, () ->
                 command.execute(tasks, ui, storage));
 
-        assertEquals("Sorry we do not recognise that command yet.", exception.getMessage());
+        assertEquals("Confound it! I do not recognise that command in my lexicon.", exception.getMessage());
     }
 }

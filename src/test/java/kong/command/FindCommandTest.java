@@ -30,7 +30,7 @@ class FindCommandTest {
 
         command.execute(tasks, ui, storage);
 
-        assertTrue(output.contains("Here are the matching tasks in your list:"));
+        assertTrue(output.contains("Eureka! Here are the matching tasks found in your archives:"));
         assertTrue(output.contains("1. [T][ ] read book"));
     }
 
@@ -45,6 +45,6 @@ class FindCommandTest {
 
         command.execute(tasks, ui, storage);
 
-        assertTrue(output.contains("There are no matching tasks in your list."));
+        assertTrue(output.contains("Search complete. There are no matching tasks in your list."));
     }
 }
