@@ -49,6 +49,15 @@ public class Ui {
     }
 
     /**
+     * Checks whether another line of command input is available from standard input.
+     *
+     * @return {@code true} if there is another line of input; {@code false} otherwise
+     */
+    public boolean hasNextCommand() {
+        return scanner != null && scanner.hasNextLine();
+    }
+
+    /**
      * Reads the user's next command line.
      *
      * @return entered command text

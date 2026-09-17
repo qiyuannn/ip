@@ -1,6 +1,7 @@
 package kong;
 
 import java.io.IOException;
+import java.util.NoSuchElementException;
 
 import kong.command.Command;
 import kong.exception.KongException;
@@ -37,11 +38,13 @@ public class Kong {
         ui.showWelcome();
 
         boolean isExit = false;
-        while (!isExit) {
+        while (!isExit && ui.hasNextCommand()) {
             try {
                 String fullCommand = ui.readCommand();
                 ui.showLine();
                 isExit = executeCommand(fullCommand, ui);
+            } catch (NoSuchElementException e) {
+                break;
             } finally {
                 ui.showLine();
             }

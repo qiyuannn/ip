@@ -49,6 +49,13 @@ class ParserTest {
     }
 
     @Test
+    void parse_nullInput_throwsHelpfulException() {
+        KongException exception = assertThrows(KongException.class, () -> Parser.parse(null));
+
+        assertEquals("Please enter a command.", exception.getMessage());
+    }
+
+    @Test
     void parseThrowsHelpfulExceptionForMissingRequiredArguments() {
         assertParseError("todo", "Invalid command. A todo command needs to be in the following format: "
                 + "todo <description>");

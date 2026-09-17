@@ -66,10 +66,11 @@ public class Parser {
      * @throws KongException if a recognized command has invalid arguments
      */
     public static Command parse(String input) throws KongException {
-        String trimmedInput = input.trim();
-        if (trimmedInput.isEmpty()) {
+        if (input == null || input.trim().isEmpty()) {
             throw new KongException("Please enter a command.");
         }
+
+        String trimmedInput = input.trim();
 
         String[] parts = trimmedInput.split("\\s+", 2);
         CommandType commandType = CommandType.fromString(parts[0]);

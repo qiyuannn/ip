@@ -516,3 +516,52 @@ Invalid command. The list command does not take any arguments.
 BYEBYE!
 ```
 
+## TC28 Blank command input
+
+**Aim:** Check that an empty or whitespace-only command prompts the user to enter a command.
+
+### Input
+```text
+   
+bye
+```
+
+### Expected Output
+```text
+Please enter a command.
+BYEBYE!
+```
+
+## TC29 Invalid unmark number
+
+**Aim:** Check that `unmark` with a non-numeric task number identifies the unmark command in its error message.
+
+### Input
+```text
+unmark abc
+bye
+```
+
+### Expected Output
+```text
+Invalid command. A unmark command needs to be followed by a number.
+BYEBYE!
+```
+
+## TC30 Zero task number
+
+**Aim:** Check that an invalid task number such as 0 is rejected with a message showing current task count.
+
+### Input
+```text
+mark 0
+bye
+```
+
+### Expected Output
+```text
+This task number is invalid. You currently have 0 tasks in your list.
+BYEBYE!
+```
+
+

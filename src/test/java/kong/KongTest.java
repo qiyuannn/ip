@@ -3,6 +3,9 @@ package kong;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
@@ -124,5 +127,29 @@ class KongTest {
 
         assertTrue(response.contains("Sorry we do not recognise that command yet."));
         assertTrue(kong.isLastError());
+    }
+
+    @Test
+    void getResponse_nullInput_reportsErrorAndSetsLastError() {
+        Kong kong = new Kong(temporaryDirectory.resolve("data/tasks.txt").toString());
+
+        String response = kong.getResponse(null);
+
+        assertTrue(response.contains("Please enter a command."));
+        assertTrue(kong.isLastError());
+    }
+
+    @Test
+    void run_withExhaustedInputStream_terminatesWithoutException() {
+        InputStream originalIn = System.in;
+        try {
+            ByteArrayInputStream in = new ByteArrayInputStream("list\n".getBytes(StandardCharsets.UTF_8));
+            System.setIn(in);
+            Kong kong = new Kong(temporaryDirectory.resolve("data/tasks.txt").toString());
+
+            kong.run();
+        } finally {
+            System.setIn(originalIn);
+        }
     }
 }

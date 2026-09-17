@@ -1,6 +1,7 @@
 package kong.ui;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -229,5 +230,40 @@ class UiTest {
         Ui ui = new Ui(message -> { });
 
         assertThrows(AssertionError.class, ui::readCommand);
+    }
+
+    @Test
+    void hasNextCommand_withAvailableInput_returnsTrue() {
+        InputStream originalIn = System.in;
+        try {
+            ByteArrayInputStream in = new ByteArrayInputStream("list\n".getBytes(StandardCharsets.UTF_8));
+            System.setIn(in);
+            Ui ui = new Ui();
+
+            assertTrue(ui.hasNextCommand());
+        } finally {
+            System.setIn(originalIn);
+        }
+    }
+
+    @Test
+    void hasNextCommand_withExhaustedInput_returnsFalse() {
+        InputStream originalIn = System.in;
+        try {
+            ByteArrayInputStream in = new ByteArrayInputStream("".getBytes(StandardCharsets.UTF_8));
+            System.setIn(in);
+            Ui ui = new Ui();
+
+            assertFalse(ui.hasNextCommand());
+        } finally {
+            System.setIn(originalIn);
+        }
+    }
+
+    @Test
+    void hasNextCommand_responseOnlyUi_returnsFalse() {
+        Ui ui = new Ui(message -> { });
+
+        assertFalse(ui.hasNextCommand());
     }
 }
