@@ -5,6 +5,7 @@ import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import kong.ui.MainWindow;
@@ -23,7 +24,8 @@ public class Main extends Application {
             AnchorPane mainWindow = loader.load();
             loader.<MainWindow>getController().setKong(kong);
 
-            stage.setTitle("Kong");
+            stage.setTitle("Professor Kong");
+            stage.getIcons().add(new Image(Main.class.getResourceAsStream("/images/DaKong.png")));
             stage.setMinHeight(450);
             stage.setMinWidth(400);
             stage.setResizable(true);

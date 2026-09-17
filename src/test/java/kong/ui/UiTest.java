@@ -29,8 +29,9 @@ class UiTest {
         ui.showWelcome();
 
         assertEquals(1, output.size());
-        assertTrue(output.get(0).contains("Hello, I'm Kong."));
-        assertTrue(output.get(0).contains("What can I do for you?"));
+        assertTrue(output.get(0).contains("Greetings, esteemed colleague! I am Professor Kong."));
+        assertTrue(output.get(0).contains(
+                "What grand endeavor or academic inquiry shall we pursue today?"));
         assertTrue(output.get(0).contains("________________________________________"));
     }
 

@@ -16,7 +16,8 @@ import kong.Kong;
  * Controls the main chat window and passes user commands to Kong.
  */
 public class MainWindow extends AnchorPane {
-    private static final String WELCOME_MESSAGE = "Hello, I'm Kong!\nWhat can I do for you?";
+    private static final String WELCOME_MESSAGE = "Greetings, esteemed colleague! I am Professor Kong.\n"
+            + "What grand endeavor or academic inquiry shall we pursue today?";
 
     @FXML
     private ScrollPane scrollPane;
