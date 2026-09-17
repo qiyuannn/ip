@@ -6,7 +6,6 @@ import java.util.function.Consumer;
 
 import kong.task.Task;
 import kong.task.TaskList;
-import kong.task.Todo;
 
 /**
  * Handles interactions with the user through the console.
@@ -143,11 +142,7 @@ public class Ui {
      * @param task added task
      */
     public void showTaskAdded(Task task) {
-        if (task instanceof Todo) {
-            output.accept("Got it. I've added this task");
-        } else {
-            output.accept("Got it. I've added this task.");
-        }
+        output.accept("Splendid addition! I have inscribed this task into your archives:");
         output.accept(task.toString());
     }
 
@@ -157,7 +152,7 @@ public class Ui {
      * @param task updated task
      */
     public void showTaskMarked(Task task) {
-        output.accept("I've marked this task as done.");
+        output.accept("Capital progress! I have marked this task as completed:");
         output.accept(task.toString());
     }
 
@@ -167,7 +162,7 @@ public class Ui {
      * @param task updated task
      */
     public void showTaskUnmarked(Task task) {
-        output.accept("I've marked this task as undone.");
+        output.accept("Back to the drawing board! I have restored this task to pending status:");
         output.accept(task.toString());
     }
 
@@ -177,12 +172,12 @@ public class Ui {
      * @param task removed task
      */
     public void showTaskDeleted(Task task) {
-        output.accept("The following task have been removed.");
+        output.accept("Expunged from the archives! The following task has been removed:");
         output.accept(task.toString());
     }
 
     /** Displays the exit message. */
     public void showGoodbye() {
-        output.accept("BYEBYE!");
+        output.accept("Cheerio! Until our next scholarly consultation.");
     }
 }

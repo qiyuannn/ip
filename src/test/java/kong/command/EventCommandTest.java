@@ -36,7 +36,7 @@ class EventCommandTest {
         assertEquals(1, tasks.size());
         assertEquals("[E][ ] project meeting (from: Oct 15 2019 to: Oct 16 2019)",
                 tasks.get(0).toString());
-        assertTrue(output.contains("Got it. I've added this task."));
+        assertTrue(output.contains("Splendid addition! I have inscribed this task into your archives:"));
         assertEquals(1, storage.loadTasks().size());
     }
 

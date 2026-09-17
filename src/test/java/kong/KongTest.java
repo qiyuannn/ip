@@ -22,7 +22,7 @@ class KongTest {
         String addResponse = kong.getResponse("todo read book");
         String listResponse = kong.getResponse("list");
 
-        assertTrue(addResponse.contains("Got it. I've added this task"));
+        assertTrue(addResponse.contains("Splendid addition! I have inscribed this task into your archives:"));
         assertTrue(addResponse.contains("[T][ ] read book"));
         assertTrue(listResponse.contains("1. [T][ ] read book"));
         assertFalse(kong.isLastError());
@@ -55,7 +55,7 @@ class KongTest {
 
         String response = kong.getResponse("bye");
 
-        assertTrue(response.contains("BYEBYE!"));
+        assertTrue(response.contains("Cheerio! Until our next scholarly consultation."));
         assertTrue(kong.isExitRequested());
     }
 
@@ -107,10 +107,11 @@ class KongTest {
         kong.getResponse("deadline return book /by 2019-10-15");
 
         String markResponse = kong.getResponse("mark 1");
-        assertTrue(markResponse.contains("I've marked this task as done."));
+        assertTrue(markResponse.contains("Capital progress! I have marked this task as completed:"));
 
         String unmarkResponse = kong.getResponse("unmark 1");
-        assertTrue(unmarkResponse.contains("I've marked this task as undone."));
+        assertTrue(unmarkResponse.contains(
+                "Back to the drawing board! I have restored this task to pending status:"));
 
         String findResponse = kong.getResponse("find book");
         assertTrue(findResponse.contains("Here are the matching tasks in your list:"));

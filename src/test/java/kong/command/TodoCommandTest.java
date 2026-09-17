@@ -33,7 +33,7 @@ class TodoCommandTest {
 
         assertEquals(1, tasks.size());
         assertEquals("[T][ ] read book", tasks.get(0).toString());
-        assertTrue(output.contains("Got it. I've added this task"));
+        assertTrue(output.contains("Splendid addition! I have inscribed this task into your archives:"));
         assertEquals(1, storage.loadTasks().size());
     }
 

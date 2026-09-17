@@ -27,7 +27,7 @@ class ExitCommandTest {
 
         command.execute(tasks, ui, storage);
 
-        assertTrue(output.contains("BYEBYE!"));
+        assertTrue(output.contains("Cheerio! Until our next scholarly consultation."));
     }
 
     @Test
