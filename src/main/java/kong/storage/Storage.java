@@ -19,6 +19,9 @@ import kong.task.Todo;
  * Loads and saves tasks using Kong's pipe-delimited text format.
  */
 public class Storage {
+    private static final DateTimeFormatter STRICT_DATE_FORMATTER =
+            DateTimeFormatter.ofPattern("uuuu-MM-dd").withResolverStyle(ResolverStyle.STRICT);
+
     private final Path filePath;
 
     /**
@@ -185,9 +188,6 @@ public class Storage {
         }
         return null;
     }
-
-    private static final DateTimeFormatter STRICT_DATE_FORMATTER =
-            DateTimeFormatter.ofPattern("uuuu-MM-dd").withResolverStyle(ResolverStyle.STRICT);
 
     /**
      * Parses an ISO date without allowing malformed records to stop loading.
